@@ -62,9 +62,19 @@ class HomeFragment : Fragment() {
 
         search.addTextChangedListener { text ->
             mainViewModel.searchStringChanged(text?.toString().orEmpty())
+            binding.homeSearchCloseButton.contentDescription = getString(
+                if (text.isNullOrEmpty()) R.string.close_search else R.string.clear_search
+            )
         }
         binding.homeSearchButton.setOnClickListener {
-            setSearchVisible(binding.homeSearchLayout.visibility != View.VISIBLE)
+            setSearchVisible(true)
+        }
+        binding.homeSearchCloseButton.setOnClickListener {
+            if (search.text.isNullOrEmpty()) {
+                setSearchVisible(false)
+            } else {
+                search.setText("")
+            }
         }
         binding.homeSortButton.setOnClickListener(::showSortMenu)
 
@@ -87,13 +97,12 @@ class HomeFragment : Fragment() {
         val search = binding.homeSearch
         val inputMethodManager = requireContext().getSystemService(InputMethodManager::class.java)
 
-        binding.homeSearchLayout.visibility = if (visible) View.VISIBLE else View.GONE
-        binding.homeSearchButton.setIconResource(
-            if (visible) R.drawable.ic_close_24dp else R.drawable.ic_search_24dp
-        )
-        binding.homeSearchButton.contentDescription = getString(
-            if (visible) R.string.close_search else R.string.search_event
-        )
+        val normalVisibility = if (visible) View.INVISIBLE else View.VISIBLE
+        binding.homeTitle.visibility = normalVisibility
+        binding.homeSearchButton.visibility = normalVisibility
+        binding.homeSortButton.visibility = normalVisibility
+        binding.homeSearch.visibility = if (visible) View.VISIBLE else View.GONE
+        binding.homeSearchCloseButton.visibility = if (visible) View.VISIBLE else View.GONE
 
         if (visible && requestFocus) {
             search.requestFocus()

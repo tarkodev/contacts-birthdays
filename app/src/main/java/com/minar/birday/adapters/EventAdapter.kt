@@ -20,7 +20,6 @@ import com.minar.birday.utilities.formatDaysRemaining
 import com.minar.birday.utilities.formatName
 import com.minar.birday.utilities.getNextYears
 import com.minar.birday.utilities.getRemainingDays
-import com.minar.birday.utilities.getStringForTypeCodename
 import com.minar.birday.utilities.setEventImageOrPlaceholder
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -129,10 +128,6 @@ class EventAdapter(
             val event = eventItem.eventResult
             val sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context)
             val personName = formatName(event, sharedPrefs.getBoolean("surname_first", false))
-            val typeName = getStringForTypeCodename(
-                context,
-                event.type ?: EventCode.BIRTHDAY.name
-            )
             val dateText = if (event.yearMatter == true) {
                 event.originalDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG))
             } else {
@@ -148,22 +143,34 @@ class EventAdapter(
                 event.yearMatter == true && event.type != EventCode.NAME_DAY.name && nextAge > 0
 
             eventPerson.text = personName
-            eventDate.text = if (showAgeProgression) {
+            eventDate.text = dateText
+            eventAgeProgression.visibility = if (showAgeProgression) View.VISIBLE else View.GONE
+            if (showAgeProgression) {
+                eventAgeCurrent.text = context.getString(
+                    R.string.age_progression_current,
+                    nextAge - 1
+                )
+                eventAgeNext.text = context.resources.getQuantityString(
+                    R.plurals.years,
+                    nextAge,
+                    nextAge
+                )
+            }
+            eventCountdown.text = countdownText
+            val dateDescription = if (showAgeProgression) {
                 context.getString(
-                    R.string.event_date_with_age_line,
-                    typeName,
+                    R.string.event_date_with_age_description,
                     dateText,
                     nextAge - 1,
                     nextAge
                 )
             } else {
-                context.getString(R.string.event_date_line, typeName, dateText)
+                dateText
             }
-            eventCountdown.text = countdownText
             root.contentDescription = context.getString(
                 R.string.event_row_description,
                 personName,
-                eventDate.text,
+                dateDescription,
                 countdownText
             )
 

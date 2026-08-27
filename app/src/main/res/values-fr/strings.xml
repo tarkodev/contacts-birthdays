@@ -17,7 +17,7 @@
     <string name="contact_photo">Photo du contact</string>
     <string name="open_contact">Ouvrir le contact</string>
     <string name="event_date_line">%1$s : %2$s</string>
-    <string name="event_date_with_age_line">%1$s : %2$s · %3$d → %4$d ans</string>
+    <string name="event_date_with_age_description">%1$s, %2$d à %3$d ans</string>
     <string name="event_row_description">%1$s, %2$s, %3$s</string>
     <string name="no_events">Aucun anniversaire trouvé dans les contacts.</string>
     <string name="no_favorites">Il n\'y a rien ici ! Cliquer sur l\'étoile pour ajouter un événement à vos favoris !</string>
@@ -275,6 +275,7 @@
     <!-- Search -->
     <string name="search_event">Rechercher…</string>
     <string name="close_search">Fermer la recherche</string>
+    <string name="clear_search">Effacer la recherche</string>
     <string name="search_no_result_title">Aucun résultat n\'a été trouvé</string>
     <string name="search_no_result_description">Votre requête ne correspond à aucun événement de la base de données Birday !</string>
     <!-- Notes -->

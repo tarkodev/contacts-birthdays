@@ -22,66 +22,67 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.button.MaterialButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/homeSearchButton"
-        style="@style/Widget.Material3Expressive.Button.IconButton.Outlined"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/search_event"
-        app:icon="@drawable/ic_search_24dp"
-        app:iconTint="?attr/colorOnSurface"
+        android:padding="12dp"
+        android:src="@drawable/ic_search_24dp"
         app:layout_constraintBottom_toBottomOf="@id/homeTitle"
         app:layout_constraintEnd_toStartOf="@id/homeSortButton"
-        app:layout_constraintTop_toTopOf="@id/homeTitle" />
+        app:layout_constraintTop_toTopOf="@id/homeTitle"
+        app:tint="?attr/colorOnSurface" />
 
-    <com.google.android.material.button.MaterialButton
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/homeSortButton"
-        style="@style/Widget.Material3Expressive.Button.IconButton.Outlined"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginEnd="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/sort_events"
-        app:icon="@drawable/ic_sort_24dp"
-        app:iconTint="?attr/colorOnSurface"
+        android:padding="12dp"
+        android:src="@drawable/ic_sort_24dp"
         app:layout_constraintBottom_toBottomOf="@id/homeTitle"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/homeTitle"
+        app:tint="?attr/colorOnSurface" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/homeSearch"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="8dp"
+        android:background="@null"
+        android:hint="@string/search_event"
+        android:inputType="textPersonName"
+        android:maxLines="1"
+        android:padding="0dp"
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
+        android:textCursorDrawable="@drawable/custom_cursor"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/homeTitle"
+        app:layout_constraintEnd_toStartOf="@id/homeSearchCloseButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/homeTitle" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/homeSearchLayout"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="12dp"
-        android:hint="@string/search_event"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/homeSearchCloseButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/close_search"
+        android:padding="12dp"
+        android:src="@drawable/ic_close_24dp"
         android:visibility="gone"
-        app:boxBackgroundColor="?attr/colorSurfaceVariant"
-        app:boxCornerRadiusBottomEnd="18dp"
-        app:boxCornerRadiusBottomStart="18dp"
-        app:boxCornerRadiusTopEnd="18dp"
-        app:boxCornerRadiusTopStart="18dp"
-        app:boxStrokeWidth="0dp"
-        app:boxStrokeWidthFocused="0dp"
-        app:endIconMode="clear_text"
-        app:hintEnabled="false"
+        app:layout_constraintBottom_toBottomOf="@id/homeTitle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/homeTitle"
-        app:startIconContentDescription="@string/search_event"
-        app:startIconDrawable="@drawable/ic_search_24dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/homeSearch"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:hint="@string/search_event"
-            android:inputType="textPersonName"
-            android:maxLines="1"
-            android:textCursorDrawable="@drawable/custom_cursor" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toTopOf="@id/homeTitle"
+        app:tint="?attr/colorOnSurface" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/noEvents"
@@ -98,7 +99,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/homeSearchLayout" />
+        app:layout_constraintTop_toBottomOf="@id/homeTitle" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/eventRecycler"
@@ -113,6 +114,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/homeSearchLayout" />
+        app:layout_constraintTop_toBottomOf="@id/homeTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
