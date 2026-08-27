@@ -35,6 +35,15 @@ foreach ($expectedText in "Aline Test", "Benoit Exemple") {
     }
 }
 
+$contactsWithPhotos = adb shell content query `
+    --uri content://com.android.contacts/contacts `
+    --projection _id:display_name:photo_uri |
+    Select-String -Pattern "photo_uri=content://"
+
+if ($contactsWithPhotos.Count -lt 12) {
+    throw "Expected at least 12 contact photos, found $($contactsWithPhotos.Count). Run seed-test-contacts.ps1 first."
+}
+
 $fatalLogs = adb logcat -d -t 300 AndroidRuntime:E "*:S"
 
 if ($fatalLogs -match "Process: $([regex]::Escape($Package))") {

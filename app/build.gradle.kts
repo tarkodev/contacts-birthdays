@@ -71,6 +71,10 @@ android {
     lint {
         disable += listOf("MissingTranslation", "MissingQuantity")
     }
+
+    sourceSets {
+        getByName("androidTest").assets.srcDir("../test-data/profile-photos")
+    }
 }
 
 configurations.configureEach {

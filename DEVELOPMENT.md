@@ -54,15 +54,19 @@ the Run action.
 ## Test contacts
 
 `test-data\contacts.vcf` contains fictional contacts covering ordinary dates,
-missing years, duplicate names, non-ASCII names, long names, and February 29.
-Never use personal contacts for automated testing. The repeatable local setup is:
+missing years, duplicate names, long names, and February 29. Twelve synthetic
+profile portraits are stored in `test-data\profile-photos`. Never use personal
+contacts for automated testing. The repeatable local setup is:
 
 ```powershell
 .\scripts\windows\seed-test-contacts.ps1
 ```
 
 The script replaces only contacts stored under its dedicated `AnnivAppTest`
-test account. It does not delete personal or unrelated emulator contacts.
+test account. It does not delete personal or unrelated emulator contacts. A
+debug-only instrumentation helper attaches the portraits and updates AnnivApp's
+test events immediately; the release manifest does not request contact-write
+access.
 
 Alternatively, copy the VCF file to the emulator and open it with Contacts:
 
@@ -74,7 +78,8 @@ adb push .\test-data\contacts.vcf /sdcard/Download/annivapp-test-contacts.vcf
 
 - `testDebugUnitTest`: date, age, recurrence, sorting, and data conversion logic
 - `lintDebug`: Android correctness, resource, permission, and accessibility lint
-- `connectedDebugAndroidTest`: device and UI tests on a running emulator
+- `assembleDebugAndroidTest`: compiles the device helpers and instrumentation tests
+- `TestContactSeeder`: writes and verifies the 12 contacts, portraits, and app events
 - `smoke-test.ps1`: installed-process, fixture visibility, and fatal-log check
 - Manual device pass: notification delivery, battery restrictions, and widgets
 

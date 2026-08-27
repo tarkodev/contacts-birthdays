@@ -23,7 +23,7 @@ $env:ANDROID_SDK_ROOT = $androidSdk
 
 Push-Location -LiteralPath $projectRoot
 try {
-    & .\gradlew.bat testDebugUnitTest lintDebug assembleDebug
+    & .\gradlew.bat testDebugUnitTest lintDebug assembleDebug assembleDebugAndroidTest
     if ($LASTEXITCODE -ne 0) {
         throw "Gradle validation failed with exit code $LASTEXITCODE."
     }
