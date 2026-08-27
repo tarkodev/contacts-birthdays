@@ -198,6 +198,7 @@ class ContactsRepository {
 
                 Event(
                     id = 0,
+                    contactId = contact.id.toLongOrNull(),
                     name = name,
                     surname = surname,
                     originalDate = LocalDate.parse(parseDate),

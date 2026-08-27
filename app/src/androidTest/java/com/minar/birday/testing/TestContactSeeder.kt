@@ -74,6 +74,7 @@ class TestContactSeeder {
 
         val rawContactIds = mutableListOf<Long>()
         val fixtureImages = mutableMapOf<Fixture, ByteArray>()
+        val fixtureContactIds = mutableMapOf<Fixture, Long>()
 
         fixtures.forEach { fixture ->
             val image = testAssets.open(fixture.photo).use { it.readBytes() }
@@ -136,6 +137,17 @@ class TestContactSeeder {
                     put(ContactsContract.Data.IS_SUPER_PRIMARY, 1)
                 },
             )
+
+            val contactId = resolver.query(
+                ContactsContract.RawContacts.CONTENT_URI,
+                arrayOf(ContactsContract.RawContacts.CONTACT_ID),
+                "${ContactsContract.RawContacts._ID} = ?",
+                arrayOf(rawContactId.toString()),
+                null,
+            )?.use { cursor ->
+                if (cursor.moveToFirst()) cursor.getLong(0) else null
+            } ?: error("Failed to resolve contact id for ${fixture.givenName}")
+            fixtureContactIds[fixture] = contactId
         }
 
         val activeFixtureCount = resolver.query(
@@ -166,6 +178,7 @@ class TestContactSeeder {
             )
             Event(
                 id = 0,
+                contactId = fixtureContactIds.getValue(fixture),
                 type = EventCode.BIRTHDAY.name,
                 name = fixture.givenName,
                 surname = fixture.familyName,
@@ -185,6 +198,7 @@ class TestContactSeeder {
                         actual.surname == expected.surname &&
                         actual.originalDate == expected.originalDate &&
                         actual.yearMatter == expected.yearMatter &&
+                        actual.contactId == expected.contactId &&
                         actual.image != null && actual.image.isNotEmpty()
                 },
             )

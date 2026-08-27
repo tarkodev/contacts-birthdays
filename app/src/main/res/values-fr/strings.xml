@@ -19,6 +19,8 @@
     <string name="sort_reversed">Inverser</string>
     <string name="contact_photo">Photo du contact</string>
     <string name="open_contact">Ouvrir le contact</string>
+    <string name="contact_not_found">Contact introuvable dans l’application Contacts.</string>
+    <string name="contacts_app_not_found">Aucune application Contacts disponible.</string>
     <string name="event_date_line">%1$s : %2$s</string>
     <string name="event_date_with_age_description">%1$s, %2$d à %3$d ans</string>
     <string name="event_row_description">%1$s, %2$s, %3$s</string>

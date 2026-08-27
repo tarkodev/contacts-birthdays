@@ -10,7 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.minar.birday.model.Event
 
 
-@Database(entities = [Event::class], version = 11, exportSchema = false)
+@Database(entities = [Event::class], version = 12, exportSchema = false)
 @TypeConverters(LocalDateTypeConverter::class)
 abstract class EventDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao
@@ -38,6 +38,11 @@ abstract class EventDatabase : RoomDatabase() {
                 )
             }
         }
+        private val MIGRATION_11_12: Migration = object : Migration(11, 12) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE Event ADD COLUMN contactId INTEGER")
+            }
+        }
         fun getBirdayDatabase(context: Context): EventDatabase {
             val tempInstance = INSTANCE
             if (tempInstance != null) {
@@ -51,6 +56,7 @@ abstract class EventDatabase : RoomDatabase() {
                 )
                     .addMigrations(MIGRATION_9_10)
                     .addMigrations(MIGRATION_10_11)
+                    .addMigrations(MIGRATION_11_12)
                     .build()
                 INSTANCE = instance
                 return instance

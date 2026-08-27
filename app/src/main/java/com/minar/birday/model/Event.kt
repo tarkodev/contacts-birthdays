@@ -31,6 +31,7 @@ data class Event(
     val notes: String? = "",
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     val image: ByteArray? = null,
+    val contactId: Long? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -43,6 +44,7 @@ data class Event(
         if (name != other.name) return false
         if (surname != other.surname) return false
         if (originalDate != other.originalDate) return false
+        if (contactId != other.contactId) return false
         if (!image.contentEquals(other.image)) return false
 
         return true
@@ -58,6 +60,7 @@ data class Event(
         result = 31 * result + originalDate.hashCode()
         result = 31 * result + (notes?.hashCode() ?: 0)
         result = 31 * result + (image?.contentHashCode() ?: 0)
+        result = 31 * result + (contactId?.hashCode() ?: 0)
         return result
     }
 }

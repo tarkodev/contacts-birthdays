@@ -40,7 +40,8 @@ enum class EventSortOrder {
 
 class EventAdapter(
     private val context: Context,
-    private val onItemClick: (position: Int) -> Unit
+    private val onItemClick: (position: Int) -> Unit,
+    private val onItemLongClick: (position: Int) -> Unit
 ) : ListAdapter<EventDataItem, RecyclerView.ViewHolder>(EventsDiffCallback()) {
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
         is EventDataItem.IndexHeader -> ITEM_VIEW_TYPE_HEADER
@@ -170,6 +171,15 @@ class EventAdapter(
             binding.root.setOnClickListener {
                 val position = bindingAdapterPosition
                 if (position != RecyclerView.NO_POSITION) onItemClick(position)
+            }
+            binding.root.setOnLongClickListener {
+                val position = bindingAdapterPosition
+                if (position == RecyclerView.NO_POSITION) {
+                    false
+                } else {
+                    onItemLongClick(position)
+                    true
+                }
             }
         }
 

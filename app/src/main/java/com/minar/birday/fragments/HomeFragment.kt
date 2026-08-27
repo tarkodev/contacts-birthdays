@@ -1,20 +1,26 @@
 package com.minar.birday.fragments
 
+import android.Manifest
+import android.content.ActivityNotFoundException
+import android.content.ContentUris
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.view.doOnPreDraw
 import androidx.core.widget.addTextChangedListener
-import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.FragmentNavigator
-import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.minar.birday.R
@@ -24,8 +30,12 @@ import com.minar.birday.adapters.EventSortOrder
 import com.minar.birday.databinding.FragmentHomeBinding
 import com.minar.birday.model.EventDataItem
 import com.minar.birday.model.EventResult
+import com.minar.birday.persistence.ContactsRepository
 import com.minar.birday.utilities.addInsetsByPadding
 import com.minar.birday.viewmodels.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -33,14 +43,24 @@ class HomeFragment : Fragment() {
     private lateinit var act: MainActivity
     private lateinit var sharedPrefs: SharedPreferences
     private var currentEvents: List<EventResult> = emptyList()
+    private var pendingContactEdit: PendingContactEdit? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private val editContactLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        refreshEditedContact()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         act = activity as MainActivity
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        adapter = EventAdapter(requireContext(), onItemClick = ::onItemClick)
+        adapter = EventAdapter(
+            requireContext(),
+            onItemClick = ::onItemClick,
+            onItemLongClick = ::onItemLongClick
+        )
     }
 
     override fun onCreateView(
@@ -187,25 +207,92 @@ class HomeFragment : Fragment() {
     }
 
     private fun onItemClick(position: Int) {
-        if (findNavController().currentDestination?.label != "fragment_home") return
-        val item = adapter.getItem(position)
-        if (item !is EventDataItem.EventItem) return
+        openSystemContact(position, edit = false)
+    }
 
+    private fun onItemLongClick(position: Int) {
         act.vibrate()
-        val viewHolder = binding.eventRecycler.findViewHolderForAdapterPosition(position) ?: return
-        val fullView = viewHolder.itemView
-        val image = fullView.findViewById<ImageView>(R.id.eventImage)
-        val action = HomeFragmentDirections.actionNavigationMainToDetailsFragment(
-            item.eventResult,
-            position
-        )
-        val extras: FragmentNavigator.Extras =
-            if (sharedPrefs.getBoolean("hide_images", false)) {
-                FragmentNavigatorExtras(fullView to "shared_full_view$position")
-            } else {
-                FragmentNavigatorExtras(image to "shared_image$position")
+        openSystemContact(position, edit = true)
+    }
+
+    private fun openSystemContact(position: Int, edit: Boolean) {
+        if (findNavController().currentDestination?.label != "fragment_home") return
+        val item = adapter.getItem(position) as? EventDataItem.EventItem ?: return
+        val event = item.eventResult
+
+        lifecycleScope.launch {
+            val contactId = event.contactId ?: findLegacyContactId(event)
+            if (contactId == null) {
+                act.showSnackbar(getString(R.string.contact_not_found))
+                return@launch
             }
-        findNavController().navigate(action, extras)
+
+            val contactUri = ContentUris.withAppendedId(
+                ContactsContract.Contacts.CONTENT_URI,
+                contactId
+            )
+            val intent = Intent(
+                if (edit) Intent.ACTION_EDIT else Intent.ACTION_VIEW,
+                contactUri
+            ).apply {
+                if (edit) putExtra("finishActivityOnSaveCompleted", true)
+            }
+
+            try {
+                if (edit) {
+                    pendingContactEdit = PendingContactEdit(event.id, contactId)
+                    editContactLauncher.launch(intent)
+                } else {
+                    startActivity(intent)
+                }
+            } catch (_: ActivityNotFoundException) {
+                pendingContactEdit = null
+                act.showSnackbar(getString(R.string.contacts_app_not_found))
+            }
+        }
+    }
+
+    private suspend fun findLegacyContactId(event: EventResult): Long? {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_CONTACTS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return null
+        }
+
+        return withContext(Dispatchers.IO) {
+            ContactsRepository().findContactIdByName(
+                requireContext().contentResolver,
+                event.name,
+                event.surname.orEmpty()
+            )?.toLongOrNull()
+        }
+    }
+
+    private fun refreshEditedContact() {
+        val editedContact = pendingContactEdit ?: return
+        pendingContactEdit = null
+        val appContext = context?.applicationContext ?: return
+        if (ContextCompat.checkSelfPermission(
+                appContext,
+                Manifest.permission.READ_CONTACTS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        lifecycleScope.launch {
+            val contactEvents = withContext(Dispatchers.IO) {
+                ContactsRepository().getEventsFromContacts(appContext.contentResolver)
+                    .filter { it.contactId == editedContact.contactId }
+            }
+            mainViewModel.replaceContactEvents(
+                editedContact.eventId,
+                editedContact.contactId,
+                contactEvents
+            )
+        }
     }
 
     override fun onDestroyView() {
@@ -223,4 +310,9 @@ class HomeFragment : Fragment() {
         const val PREF_SORT_ORDER = "home_sort_order"
         const val PREF_SORT_REVERSED = "home_sort_reversed"
     }
+
+    private data class PendingContactEdit(
+        val eventId: Int,
+        val contactId: Long
+    )
 }

@@ -35,6 +35,19 @@ interface EventDao {
     @Delete
     fun deleteAllEvent(event: List<Event>)
 
+    @Query("DELETE FROM Event WHERE id = :eventId")
+    fun deleteEventById(eventId: Int)
+
+    @Query("DELETE FROM Event WHERE contactId = :contactId")
+    fun deleteEventsByContactId(contactId: Long)
+
+    @Transaction
+    fun replaceContactEvents(eventId: Int, contactId: Long, events: List<Event>) {
+        deleteEventById(eventId)
+        deleteEventsByContactId(contactId)
+        insertAllEventReplace(events)
+    }
+
     @Query("SELECT * FROM Event")
     fun getEvents(): LiveData<List<Event>>
 

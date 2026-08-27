@@ -141,7 +141,8 @@ class InsertEventBottomSheet(
                 surname = surnameValue.smartFixName(),
                 favorite = event.favorite,
                 notes = event.notes,
-                image = image
+                image = image,
+                contactId = event.contactId
             ) else
                 Event(
                     id = 0,

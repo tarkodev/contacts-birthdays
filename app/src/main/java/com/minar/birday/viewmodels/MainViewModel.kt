@@ -94,6 +94,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             eventDao.updateEventReplace(event) else eventDao.updateEventIgnore(event)
     }
 
+    fun replaceContactEvents(eventId: Int, contactId: Long, events: List<Event>) =
+        viewModelScope.launch(Dispatchers.IO) {
+            eventDao.replaceContactEvents(eventId, contactId, events)
+        }
+
     // Schedule the next work for the specified hour, nothing will happen if there's no event
     fun scheduleNextCheck() {
         val workHour = sharedPrefs.getString("notification_hour", "8")!!.toInt()
