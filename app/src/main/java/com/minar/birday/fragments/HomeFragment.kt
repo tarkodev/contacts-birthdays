@@ -6,6 +6,8 @@ import android.content.ContentUris
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,7 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import android.widget.PopupWindow
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -32,11 +34,13 @@ import com.minar.birday.R
 import com.minar.birday.activities.MainActivity
 import com.minar.birday.adapters.EventAdapter
 import com.minar.birday.adapters.EventSortOrder
-import com.minar.birday.databinding.FragmentHomeBinding
 import com.minar.birday.databinding.DialogNotesBinding
+import com.minar.birday.databinding.FragmentHomeBinding
+import com.minar.birday.databinding.PopupZodiacSignBinding
 import com.minar.birday.model.EventDataItem
 import com.minar.birday.model.EventResult
 import com.minar.birday.persistence.ContactsRepository
+import com.minar.birday.utilities.ZodiacSign
 import com.minar.birday.utilities.addInsetsByPadding
 import com.minar.birday.utilities.formatName
 import com.minar.birday.utilities.zodiacSignFor
@@ -44,6 +48,8 @@ import com.minar.birday.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class HomeFragment : Fragment() {
     private val mainViewModel: MainViewModel by activityViewModels()
@@ -53,6 +59,7 @@ class HomeFragment : Fragment() {
     private var currentEvents: List<EventResult> = emptyList()
     private var pendingContactEdit: PendingContactEdit? = null
     private var pendingNotificationEvent: EventResult? = null
+    private var zodiacPopup: PopupWindow? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val editContactLauncher = registerForActivityResult(
@@ -94,7 +101,7 @@ class HomeFragment : Fragment() {
             onItemClick = ::onItemClick,
             onItemLongClick = ::onItemLongClick,
             onNoteClick = ::showNoteDialog,
-            onZodiacClick = ::showZodiacName,
+            onZodiacClick = ::showZodiacBubble,
             onNotificationClick = ::showReminderDialog
         )
     }
@@ -273,12 +280,64 @@ class HomeFragment : Fragment() {
             .show()
     }
 
-    private fun showZodiacName(event: EventResult) {
+    private fun showZodiacBubble(event: EventResult, anchor: View) {
+        zodiacPopup?.dismiss()
         val sign = zodiacSignFor(event.originalDate)
+        val locale = resources.configuration.locales[0]
         val signName = getString(sign.labelRes).replaceFirstChar {
-            if (it.isLowerCase()) it.titlecase() else it.toString()
+            if (it.isLowerCase()) it.titlecase(locale) else it.toString()
         }
-        Toast.makeText(requireContext(), signName, Toast.LENGTH_SHORT).show()
+        val (start, end) = zodiacDateRange(sign)
+        val dateFormatter = DateTimeFormatter.ofPattern("d MMMM", locale)
+        val popupBinding = PopupZodiacSignBinding.inflate(layoutInflater).apply {
+            zodiacPopupIcon.setImageResource(sign.iconRes)
+            zodiacPopupText.text = getString(
+                R.string.zodiac_popup_label,
+                signName,
+                start.format(dateFormatter),
+                end.format(dateFormatter)
+            )
+        }
+        val popup = PopupWindow(
+            popupBinding.root,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            false
+        ).apply {
+            isTouchable = false
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+        zodiacPopup = popup
+        popup.setOnDismissListener {
+            if (zodiacPopup === popup) zodiacPopup = null
+        }
+
+        popupBinding.root.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+        val spacing = (8 * resources.displayMetrics.density).toInt()
+        popup.showAsDropDown(
+            anchor,
+            -popupBinding.root.measuredWidth - spacing,
+            -anchor.height
+        )
+        anchor.postDelayed({ if (popup.isShowing) popup.dismiss() }, ZODIAC_POPUP_DURATION_MS)
+    }
+
+    private fun zodiacDateRange(sign: ZodiacSign): Pair<LocalDate, LocalDate> = when (sign) {
+        ZodiacSign.ARIES -> LocalDate.of(2000, 3, 21) to LocalDate.of(2000, 4, 20)
+        ZodiacSign.TAURUS -> LocalDate.of(2000, 4, 21) to LocalDate.of(2000, 5, 20)
+        ZodiacSign.GEMINI -> LocalDate.of(2000, 5, 21) to LocalDate.of(2000, 6, 21)
+        ZodiacSign.CANCER -> LocalDate.of(2000, 6, 22) to LocalDate.of(2000, 7, 22)
+        ZodiacSign.LEO -> LocalDate.of(2000, 7, 23) to LocalDate.of(2000, 8, 23)
+        ZodiacSign.VIRGO -> LocalDate.of(2000, 8, 24) to LocalDate.of(2000, 9, 22)
+        ZodiacSign.LIBRA -> LocalDate.of(2000, 9, 23) to LocalDate.of(2000, 10, 22)
+        ZodiacSign.SCORPIO -> LocalDate.of(2000, 10, 23) to LocalDate.of(2000, 11, 22)
+        ZodiacSign.SAGITTARIUS -> LocalDate.of(2000, 11, 23) to LocalDate.of(2000, 12, 21)
+        ZodiacSign.CAPRICORN -> LocalDate.of(2000, 12, 22) to LocalDate.of(2001, 1, 20)
+        ZodiacSign.AQUARIUS -> LocalDate.of(2000, 1, 21) to LocalDate.of(2000, 2, 18)
+        ZodiacSign.PISCES -> LocalDate.of(2000, 2, 19) to LocalDate.of(2000, 3, 20)
     }
 
     private fun showReminderDialog(event: EventResult) {
@@ -434,6 +493,8 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        zodiacPopup?.dismiss()
+        zodiacPopup = null
         _binding = null
     }
 
@@ -446,6 +507,7 @@ class HomeFragment : Fragment() {
         const val SORT_REVERSED = 5
         const val PREF_SORT_ORDER = "home_sort_order"
         const val PREF_SORT_REVERSED = "home_sort_reversed"
+        const val ZODIAC_POPUP_DURATION_MS = 2_500L
     }
 
     private data class PendingContactEdit(

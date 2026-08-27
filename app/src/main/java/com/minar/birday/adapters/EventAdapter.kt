@@ -45,7 +45,7 @@ class EventAdapter(
     private val onItemClick: (position: Int) -> Unit,
     private val onItemLongClick: (position: Int) -> Unit,
     private val onNoteClick: (event: EventResult) -> Unit,
-    private val onZodiacClick: (event: EventResult) -> Unit,
+    private val onZodiacClick: (event: EventResult, anchor: View) -> Unit,
     private val onNotificationClick: (event: EventResult) -> Unit
 ) : ListAdapter<EventDataItem, RecyclerView.ViewHolder>(EventsDiffCallback()) {
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
@@ -190,7 +190,7 @@ class EventAdapter(
                 currentEvent()?.let(onNoteClick)
             }
             binding.eventZodiacAction.setOnClickListener {
-                currentEvent()?.let(onZodiacClick)
+                currentEvent()?.let { event -> onZodiacClick(event, binding.eventZodiacAction) }
             }
             binding.eventNotificationAction.setOnClickListener {
                 currentEvent()?.let(onNotificationClick)
