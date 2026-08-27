@@ -3,10 +3,13 @@
 `contacts.vcf` contains synthetic data created exclusively for AnnivApp tests.
 The names and dates are fictional and must not be replaced with personal data.
 
-`profile-photos` contains 12 AI-generated fictional adult portraits. They do
+`profile-photos` contains 15 AI-generated fictional adult portraits. They do
 not depict known or intentionally identifiable people. The automated seeder
 assigns one photo to each contact and imports the same image into the app's
 debug database.
+
+Four fixtures intentionally omit the birth year (`--MM-DD`) to exercise the
+unknown-age path: Nina, Omar, Salome, and Eva.
 
 For a repeatable import into a running emulator:
 

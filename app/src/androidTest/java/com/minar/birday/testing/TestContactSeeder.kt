@@ -44,6 +44,9 @@ class TestContactSeeder {
         ),
         Fixture("Lea", "Test", "2004-08-27", "11-lea-test.jpg"),
         Fixture("Malo", "Test", "2002-08-27", "12-malo-test.jpg"),
+        Fixture("Nina", "Sansannee", "--08-27", "13-nina-sansannee.jpg"),
+        Fixture("Omar", "Sansannee", "--08-28", "14-omar-sansannee.jpg"),
+        Fixture("Salome", "Sansannee", "--09-01", "15-salome-sansannee.jpg"),
     )
 
     @Test
@@ -181,6 +184,7 @@ class TestContactSeeder {
                     actual.name == expected.name &&
                         actual.surname == expected.surname &&
                         actual.originalDate == expected.originalDate &&
+                        actual.yearMatter == expected.yearMatter &&
                         actual.image != null && actual.image.isNotEmpty()
                 },
             )

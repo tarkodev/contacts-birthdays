@@ -70,3 +70,21 @@ N:Test;Malo;;;
 FN:Malo Test
 BDAY:2002-08-27
 END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Sansannee;Nina;;;
+FN:Nina Sansannee
+BDAY:--08-27
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Sansannee;Omar;;;
+FN:Omar Sansannee
+BDAY:--08-28
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+N:Sansannee;Salome;;;
+FN:Salome Sansannee
+BDAY:--09-01
+END:VCARD

@@ -29,8 +29,8 @@ if (-not (adb devices | Select-String -Pattern "\sdevice$")) {
 }
 
 $photos = Get-ChildItem -LiteralPath $photosDirectory -Filter "*.jpg"
-if ($photos.Count -ne 12) {
-    throw "Expected 12 fictional profile photos in $photosDirectory, found $($photos.Count)."
+if ($photos.Count -ne 15) {
+    throw "Expected 15 fictional profile photos in $photosDirectory, found $($photos.Count)."
 }
 
 $env:JAVA_HOME = $jdk.FullName
@@ -66,4 +66,4 @@ try {
     Pop-Location
 }
 
-Write-Output "Seeded 12 fictional contacts with synthetic profile photos into the emulator and app."
+Write-Output "Seeded 15 fictional contacts with synthetic profile photos into the emulator and app."
