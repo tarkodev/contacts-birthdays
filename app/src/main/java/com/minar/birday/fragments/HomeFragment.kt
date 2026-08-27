@@ -77,6 +77,11 @@ class HomeFragment : Fragment() {
             }
         }
         binding.homeSortButton.setOnClickListener(::showSortMenu)
+        binding.homeSettingsButton.setOnClickListener {
+            if (findNavController().currentDestination?.label == "fragment_home") {
+                findNavController().navigate(R.id.navigationSettings)
+            }
+        }
 
         mainViewModel.allEvents.observe(viewLifecycleOwner) { events ->
             currentEvents = events
@@ -101,6 +106,7 @@ class HomeFragment : Fragment() {
         binding.homeTitle.visibility = normalVisibility
         binding.homeSearchButton.visibility = normalVisibility
         binding.homeSortButton.visibility = normalVisibility
+        binding.homeSettingsButton.visibility = normalVisibility
         binding.homeSearch.visibility = if (visible) View.VISIBLE else View.GONE
         binding.homeSearchCloseButton.visibility = if (visible) View.VISIBLE else View.GONE
 
