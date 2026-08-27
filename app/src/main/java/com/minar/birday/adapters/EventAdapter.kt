@@ -1,10 +1,12 @@
 package com.minar.birday.adapters
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -41,7 +43,10 @@ enum class EventSortOrder {
 class EventAdapter(
     private val context: Context,
     private val onItemClick: (position: Int) -> Unit,
-    private val onItemLongClick: (position: Int) -> Unit
+    private val onItemLongClick: (position: Int) -> Unit,
+    private val onNoteClick: (event: EventResult) -> Unit,
+    private val onZodiacClick: (event: EventResult) -> Unit,
+    private val onNotificationClick: (event: EventResult) -> Unit
 ) : ListAdapter<EventDataItem, RecyclerView.ViewHolder>(EventsDiffCallback()) {
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
         is EventDataItem.IndexHeader -> ITEM_VIEW_TYPE_HEADER
@@ -181,6 +186,21 @@ class EventAdapter(
                     true
                 }
             }
+            binding.eventNoteAction.setOnClickListener {
+                currentEvent()?.let(onNoteClick)
+            }
+            binding.eventZodiacAction.setOnClickListener {
+                currentEvent()?.let(onZodiacClick)
+            }
+            binding.eventNotificationAction.setOnClickListener {
+                currentEvent()?.let(onNotificationClick)
+            }
+        }
+
+        private fun currentEvent(): EventResult? {
+            val position = bindingAdapterPosition
+            if (position == RecyclerView.NO_POSITION) return null
+            return (getItem(position) as? EventDataItem.EventItem)?.eventResult
         }
 
         fun bind(eventItem: EventDataItem.EventItem) = with(binding) {
@@ -216,6 +236,47 @@ class EventAdapter(
                 )
             }
             eventCountdown.text = countdownText
+            val zodiacSign = zodiacSignFor(event.originalDate)
+            val zodiacName = context.getString(zodiacSign.labelRes).replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+            }
+
+            eventNoteAction.setImageResource(
+                R.drawable.ic_note_24dp
+            )
+            eventZodiacAction.setImageResource(zodiacSign.iconRes)
+            eventNotificationAction.setImageResource(
+                if (event.notificationsEnabled) {
+                    R.drawable.ic_notifications_24dp
+                } else {
+                    R.drawable.ic_notifications_none_24dp
+                }
+            )
+            eventNoteAction.contentDescription = context.getString(
+                R.string.event_note_action,
+                personName
+            )
+            eventZodiacAction.contentDescription = context.getString(
+                R.string.event_zodiac_action,
+                zodiacName
+            )
+            eventNotificationAction.contentDescription = context.getString(
+                if (event.notificationsEnabled) {
+                    R.string.disable_contact_notifications
+                } else {
+                    R.string.enable_contact_notifications
+                },
+                personName
+            )
+            tintAction(
+                eventNoteAction,
+                if (event.notes.isNullOrBlank()) R.attr.colorOnSurfaceVariant else R.attr.colorPrimary
+            )
+            tintAction(eventZodiacAction, R.attr.colorPrimary)
+            tintAction(
+                eventNotificationAction,
+                if (event.notificationsEnabled) R.attr.colorPrimary else R.attr.colorOnSurfaceVariant
+            )
             val dateDescription = if (showAgeProgression) {
                 context.getString(
                     R.string.event_date_with_age_description,
@@ -254,6 +315,17 @@ class EventAdapter(
                 eventImage.visibility = View.VISIBLE
                 setEventImageOrPlaceholder(event, eventImage)
             }
+        }
+
+        private fun tintAction(
+            view: androidx.appcompat.widget.AppCompatImageButton,
+            colorAttribute: Int
+        ) {
+            val color = MaterialColors.getColor(view, colorAttribute)
+            ImageViewCompat.setImageTintList(
+                view,
+                ColorStateList.valueOf(color)
+            )
         }
     }
 }

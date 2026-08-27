@@ -264,7 +264,8 @@ class DetailsFragment : Fragment() {
                         favorite = event.favorite,
                         notes = note,
                         image = event.image,
-                        contactId = event.contactId
+                        contactId = event.contactId,
+                        notificationsEnabled = event.notificationsEnabled
                     )
                     mainViewModel.update(tuple)
                     // Update locally (no livedata here)

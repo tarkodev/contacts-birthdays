@@ -94,6 +94,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             eventDao.updateEventReplace(event) else eventDao.updateEventIgnore(event)
     }
 
+    fun updateNotes(eventId: Int, notes: String) = viewModelScope.launch(Dispatchers.IO) {
+        eventDao.updateEventNotes(eventId, notes)
+    }
+
+    fun updateNotifications(eventId: Int, enabled: Boolean) =
+        viewModelScope.launch(Dispatchers.IO) {
+            eventDao.updateEventNotifications(eventId, enabled)
+        }
+
     fun replaceContactEvents(eventId: Int, contactId: Long, events: List<Event>) =
         viewModelScope.launch(Dispatchers.IO) {
             eventDao.replaceContactEvents(eventId, contactId, events)

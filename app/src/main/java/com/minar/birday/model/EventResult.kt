@@ -15,6 +15,7 @@ data class EventResult (
     var notes: String? = "",
     val image: ByteArray? = null,
     val contactId: Long? = null,
+    val notificationsEnabled: Boolean = false,
 ): Serializable {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -29,6 +30,8 @@ data class EventResult (
         if (yearMatter != other.yearMatter) return false
         if (originalDate != other.originalDate) return false
         if (contactId != other.contactId) return false
+        if (notificationsEnabled != other.notificationsEnabled) return false
+        if (notes != other.notes) return false
         if (!image.contentEquals(other.image)) return false
 
         return true
@@ -46,6 +49,7 @@ data class EventResult (
         result = 31 * result + (notes?.hashCode() ?: 0)
         result = 31 * result + (image?.contentHashCode() ?: 0)
         result = 31 * result + (contactId?.hashCode() ?: 0)
+        result = 31 * result + notificationsEnabled.hashCode()
         return result
     }
 }

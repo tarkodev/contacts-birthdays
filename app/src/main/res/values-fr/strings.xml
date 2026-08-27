@@ -281,10 +281,16 @@
     <string name="search_event">Rechercher…</string>
     <string name="close_search">Fermer la recherche</string>
     <string name="clear_search">Effacer la recherche</string>
+    <string name="event_note_action">Notes de %1$s</string>
+    <string name="event_zodiac_action">Signe astrologique : %1$s</string>
+    <string name="enable_contact_notifications">Activer les notifications pour %1$s</string>
+    <string name="disable_contact_notifications">Désactiver les notifications pour %1$s</string>
+    <string name="contact_notifications_enabled">Notifications activées pour %1$s</string>
+    <string name="contact_notifications_disabled">Notifications désactivées pour %1$s</string>
     <string name="search_no_result_title">Aucun résultat n\'a été trouvé</string>
     <string name="search_no_result_description">Votre requête ne correspond à aucun événement de la base de données Birday !</string>
     <!-- Notes -->
-    <string name="notes">Remarques</string>
+    <string name="notes">Notes</string>
     <string name="write_something">Écris quelque chose…</string>
     <!-- Overview -->
     <string name="overview">Aperçu</string>

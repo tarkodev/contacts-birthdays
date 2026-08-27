@@ -29,6 +29,12 @@ interface EventDao {
     @Update(onConflict = OnConflictStrategy.IGNORE)
     fun updateEventIgnore(event: Event)
 
+    @Query("UPDATE Event SET notes = :notes WHERE id = :eventId")
+    fun updateEventNotes(eventId: Int, notes: String)
+
+    @Query("UPDATE Event SET notificationsEnabled = :enabled WHERE id = :eventId")
+    fun updateEventNotifications(eventId: Int, enabled: Boolean)
+
     @Delete
     fun deleteEvent(event: Event)
 

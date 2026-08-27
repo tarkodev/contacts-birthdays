@@ -320,7 +320,8 @@ class FavoritesFragment : Fragment() {
                     favorite = event.favorite,
                     notes = note,
                     image = event.image,
-                    contactId = event.contactId
+                    contactId = event.contactId,
+                    notificationsEnabled = event.notificationsEnabled
                 )
                 mainViewModel.update(tuple)
                 dialog.dismiss()

@@ -32,7 +32,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -114,15 +113,9 @@ class MainActivity : AppCompatActivity() {
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
 
-        // Create the notification channel and check the permission on Tiramisu
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // Contacts permission is asked after the response to this permission on tiramisu
-            if (askNotificationPermission())
-            // Ask for contacts permission, if the first permission is already granted
-                askContactsPermission()
-        } else {
-            askContactsPermission()
-        }
+        // Contacts are needed for the main list. Notification permission is deliberately
+        // requested later, only when the user enables a contact reminder.
+        askContactsPermission()
         createNotificationChannel()
 
         // Retrieve the shared preferences
@@ -849,26 +842,6 @@ class MainActivity : AppCompatActivity() {
         } else true
     }
 
-    // Ask notification permission
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    fun askNotificationPermission(code: Int = 201): Boolean {
-        return if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                code
-            )
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        } else true
-    }
-
     // Manage user response to permission requests
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -912,31 +885,6 @@ class MainActivity : AppCompatActivity() {
                     val contactImporter = ContactsImporter(this, null)
                     contactImporter.importContacts(this)
                 }
-            }
-            // Notifications request at startup, plus contacts after
-            201 -> {
-                if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS))
-                        showSnackbar(
-                            getString(R.string.missing_permission_notifications),
-                            actionText = getString(R.string.cancel),
-                            action =
-                                fun() {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                        askNotificationPermission()
-                                    }
-                                })
-                    else showSnackbar(
-                        getString(R.string.missing_permission_notifications_forever),
-                        actionText = getString(R.string.title_settings),
-                        action = fun() {
-                            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                data = Uri.fromParts("package", packageName, null)
-                            })
-                        })
-                }
-                // Request contacts permission in every case
-                askContactsPermission()
             }
             // Calendar permission when importing from calendar
             302 -> {

@@ -34,7 +34,8 @@ fun resultToEvent(eventResult: EventResult) = Event(
     yearMatter = eventResult.yearMatter,
     notes = eventResult.notes,
     image = eventResult.image,
-    contactId = eventResult.contactId
+    contactId = eventResult.contactId,
+    notificationsEnabled = eventResult.notificationsEnabled
 )
 
 // Transform an event in a result event
@@ -49,7 +50,8 @@ fun eventToResult(event: Event) = EventResult(
     yearMatter = event.yearMatter,
     notes = event.notes,
     image = event.image,
-    contactId = event.contactId
+    contactId = event.contactId,
+    notificationsEnabled = event.notificationsEnabled
 )
 
 // Simply returns the next date for a given date

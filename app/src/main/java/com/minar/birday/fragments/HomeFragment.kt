@@ -6,12 +6,16 @@ import android.content.ContentUris
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -23,15 +27,19 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.minar.birday.R
 import com.minar.birday.activities.MainActivity
 import com.minar.birday.adapters.EventAdapter
 import com.minar.birday.adapters.EventSortOrder
 import com.minar.birday.databinding.FragmentHomeBinding
+import com.minar.birday.databinding.DialogNotesBinding
 import com.minar.birday.model.EventDataItem
 import com.minar.birday.model.EventResult
 import com.minar.birday.persistence.ContactsRepository
 import com.minar.birday.utilities.addInsetsByPadding
+import com.minar.birday.utilities.formatName
+import com.minar.birday.utilities.zodiacSignFor
 import com.minar.birday.viewmodels.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,12 +52,37 @@ class HomeFragment : Fragment() {
     private lateinit var sharedPrefs: SharedPreferences
     private var currentEvents: List<EventResult> = emptyList()
     private var pendingContactEdit: PendingContactEdit? = null
+    private var pendingNotificationEvent: EventResult? = null
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val editContactLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) {
         refreshEditedContact()
+    }
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        val event = pendingNotificationEvent
+        pendingNotificationEvent = null
+        if (granted && event != null) {
+            setNotificationsEnabled(event, true)
+        } else if (!granted) {
+            val canAskAgain = shouldShowRequestPermissionRationale(
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+            act.showSnackbar(
+                getString(
+                    if (canAskAgain) {
+                        R.string.missing_permission_notifications
+                    } else {
+                        R.string.missing_permission_notifications_forever
+                    }
+                ),
+                actionText = if (canAskAgain) null else getString(R.string.title_settings),
+                action = if (canAskAgain) null else ::openAppNotificationSettings
+            )
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +92,10 @@ class HomeFragment : Fragment() {
         adapter = EventAdapter(
             requireContext(),
             onItemClick = ::onItemClick,
-            onItemLongClick = ::onItemLongClick
+            onItemLongClick = ::onItemLongClick,
+            onNoteClick = ::showNoteDialog,
+            onZodiacClick = ::showZodiacName,
+            onNotificationClick = ::toggleNotifications
         )
     }
 
@@ -215,6 +251,81 @@ class HomeFragment : Fragment() {
         openSystemContact(position, edit = true)
     }
 
+    private fun showNoteDialog(event: EventResult) {
+        val dialogBinding = DialogNotesBinding.inflate(layoutInflater)
+        dialogBinding.favoritesNotes.setText(event.notes)
+        val personName = formatName(
+            event,
+            sharedPrefs.getBoolean("surname_first", false)
+        )
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("${getString(R.string.notes)} - $personName")
+            .setIcon(R.drawable.ic_note_24dp)
+            .setView(dialogBinding.root)
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                mainViewModel.updateNotes(
+                    event.id,
+                    dialogBinding.favoritesNotes.text?.toString()?.trim().orEmpty()
+                )
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun showZodiacName(event: EventResult) {
+        val sign = zodiacSignFor(event.originalDate)
+        val signName = getString(sign.labelRes).replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase() else it.toString()
+        }
+        Toast.makeText(requireContext(), signName, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun toggleNotifications(event: EventResult) {
+        if (event.notificationsEnabled) {
+            setNotificationsEnabled(event, false)
+            return
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            setNotificationsEnabled(event, true)
+        } else {
+            pendingNotificationEvent = event
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
+    private fun setNotificationsEnabled(event: EventResult, enabled: Boolean) {
+        mainViewModel.updateNotifications(event.id, enabled)
+        val personName = formatName(
+            event,
+            sharedPrefs.getBoolean("surname_first", false)
+        )
+        Toast.makeText(
+            requireContext(),
+            getString(
+                if (enabled) {
+                    R.string.contact_notifications_enabled
+                } else {
+                    R.string.contact_notifications_disabled
+                },
+                personName
+            ),
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun openAppNotificationSettings() {
+        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", requireContext().packageName, null)
+        })
+    }
+
     private fun openSystemContact(position: Int, edit: Boolean) {
         if (findNavController().currentDestination?.label != "fragment_home") return
         val item = adapter.getItem(position) as? EventDataItem.EventItem ?: return
@@ -240,7 +351,13 @@ class HomeFragment : Fragment() {
 
             try {
                 if (edit) {
-                    pendingContactEdit = PendingContactEdit(event.id, contactId)
+                    pendingContactEdit = PendingContactEdit(
+                        eventId = event.id,
+                        contactId = contactId,
+                        notes = event.notes,
+                        favorite = event.favorite,
+                        notificationsEnabled = event.notificationsEnabled
+                    )
                     editContactLauncher.launch(intent)
                 } else {
                     startActivity(intent)
@@ -286,6 +403,13 @@ class HomeFragment : Fragment() {
             val contactEvents = withContext(Dispatchers.IO) {
                 ContactsRepository().getEventsFromContacts(appContext.contentResolver)
                     .filter { it.contactId == editedContact.contactId }
+                    .map {
+                        it.copy(
+                            notes = editedContact.notes,
+                            favorite = editedContact.favorite,
+                            notificationsEnabled = editedContact.notificationsEnabled
+                        )
+                    }
             }
             mainViewModel.replaceContactEvents(
                 editedContact.eventId,
@@ -313,6 +437,9 @@ class HomeFragment : Fragment() {
 
     private data class PendingContactEdit(
         val eventId: Int,
-        val contactId: Long
+        val contactId: Long,
+        val notes: String?,
+        val favorite: Boolean?,
+        val notificationsEnabled: Boolean
     )
 }

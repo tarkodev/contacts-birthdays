@@ -142,7 +142,8 @@ class InsertEventBottomSheet(
                 favorite = event.favorite,
                 notes = event.notes,
                 image = image,
-                contactId = event.contactId
+                contactId = event.contactId,
+                notificationsEnabled = event.notificationsEnabled
             ) else
                 Event(
                     id = 0,

@@ -45,8 +45,6 @@ class EventWorker(context: Context, params: WorkerParameters) : Worker(context, 
             sharedPrefs.getStringSet("multi_additional_notification", setOf())
         val surnameFirst = sharedPrefs.getBoolean("surname_first", false)
         val hideImage = sharedPrefs.getBoolean("hide_images", false)
-        val onlyFavoritesNotification = sharedPrefs.getBoolean("notification_only_favorites", false)
-        val onlyFavoritesAdditional = sharedPrefs.getBoolean("additional_only_favorites", false)
         val angryBird = sharedPrefs.getBoolean("angry_bird", false)
         val groupNotification = sharedPrefs.getBoolean("grouped_notifications", true)
         val loopAvd = sharedPrefs.getBoolean("loop_avd", true)
@@ -56,6 +54,7 @@ class EventWorker(context: Context, params: WorkerParameters) : Worker(context, 
             val anticipated = mutableListOf<EventResult>()
             val actual = mutableListOf<EventResult>()
             for (event in allEvents) {
+                if (!event.notificationsEnabled) continue
                 // Fill the list of upcoming events
                 if (!additionalNotificationDays.isNullOrEmpty() &&
                     additionalNotificationDays.any {
@@ -63,15 +62,11 @@ class EventWorker(context: Context, params: WorkerParameters) : Worker(context, 
                             .toInt()
                     }
                 ) {
-                    // Favorite = null means that the event is ignored
-                    if (onlyFavoritesAdditional && event.favorite == false || event.favorite == null) continue
                     anticipated.add(event)
                 }
 
                 // Fill the list of events happening today
                 if (event.nextDate!!.isEqual(LocalDate.now())) {
-                    // Favorite = null means that the event is ignored
-                    if (onlyFavoritesNotification && event.favorite == false || event.favorite == null) continue
                     actual.add(event)
                 }
             }
