@@ -143,9 +143,22 @@ class EventAdapter(
             val countdownText = event.nextDate?.let {
                 formatDaysRemaining(getRemainingDays(it), context)
             }.orEmpty()
+            val nextAge = if (event.yearMatter == true) getNextYears(event) else 0
+            val showAgeProgression =
+                event.yearMatter == true && event.type != EventCode.NAME_DAY.name && nextAge > 0
 
             eventPerson.text = personName
-            eventDate.text = context.getString(R.string.event_date_line, typeName, dateText)
+            eventDate.text = if (showAgeProgression) {
+                context.getString(
+                    R.string.event_date_with_age_line,
+                    typeName,
+                    dateText,
+                    nextAge - 1,
+                    nextAge
+                )
+            } else {
+                context.getString(R.string.event_date_line, typeName, dateText)
+            }
             eventCountdown.text = countdownText
             root.contentDescription = context.getString(
                 R.string.event_row_description,
@@ -166,15 +179,10 @@ class EventAdapter(
                 )
             )
 
-            val showAge = event.yearMatter == true && event.type != EventCode.NAME_DAY.name
-            eventAge.visibility = if (showAge) View.VISIBLE else View.GONE
-            if (showAge) eventAge.text = getNextYears(event).toString()
-
             val hideImages = sharedPrefs.getBoolean("hide_images", false)
             if (hideImages) {
                 ViewCompat.setTransitionName(root, "shared_full_view$bindingAdapterPosition")
                 eventImage.visibility = View.GONE
-                eventAge.visibility = View.GONE
             } else {
                 ViewCompat.setTransitionName(eventImage, "shared_image$bindingAdapterPosition")
                 eventImage.visibility = View.VISIBLE

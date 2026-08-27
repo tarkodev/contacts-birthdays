@@ -18,6 +18,7 @@
     <string name="contact_photo">Contact photo</string>
     <string name="open_contact">Open contact</string>
     <string name="event_date_line">%1$s: %2$s</string>
+    <string name="event_date_with_age_line">%1$s: %2$s · %3$d → %4$d years</string>
     <string name="event_row_description">%1$s, %2$s, %3$s</string>
     <string name="no_events">No contact birthday found.</string>
     <string name="no_favorites">No favorites! Press the star to save an event in your favorites!</string>
@@ -305,6 +306,7 @@
     <string name="show_following_widget_description">Show the event or the events following the next one in an additional row</string>
     <!-- Search -->
     <string name="search_event">Search…</string>
+    <string name="close_search">Close search</string>
     <string name="search_no_result_title">No results found</string>
     <string name="search_no_result_description">Your search string doesn\'t match any event that you\'ve added!</string>
     <!-- Notes -->

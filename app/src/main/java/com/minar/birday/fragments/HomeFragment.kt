@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.core.content.edit
 import androidx.core.view.doOnPreDraw
@@ -62,6 +63,9 @@ class HomeFragment : Fragment() {
         search.addTextChangedListener { text ->
             mainViewModel.searchStringChanged(text?.toString().orEmpty())
         }
+        binding.homeSearchButton.setOnClickListener {
+            setSearchVisible(binding.homeSearchLayout.visibility != View.VISIBLE)
+        }
         binding.homeSortButton.setOnClickListener(::showSortMenu)
 
         mainViewModel.allEvents.observe(viewLifecycleOwner) { events ->
@@ -73,7 +77,34 @@ class HomeFragment : Fragment() {
         }
 
         val restoredSearch = mainViewModel.searchString.value.orEmpty()
-        if (restoredSearch.isNotBlank()) search.setText(restoredSearch)
+        if (restoredSearch.isNotBlank()) {
+            search.setText(restoredSearch)
+            setSearchVisible(visible = true, requestFocus = false)
+        }
+    }
+
+    private fun setSearchVisible(visible: Boolean, requestFocus: Boolean = true) {
+        val search = binding.homeSearch
+        val inputMethodManager = requireContext().getSystemService(InputMethodManager::class.java)
+
+        binding.homeSearchLayout.visibility = if (visible) View.VISIBLE else View.GONE
+        binding.homeSearchButton.setIconResource(
+            if (visible) R.drawable.ic_close_24dp else R.drawable.ic_search_24dp
+        )
+        binding.homeSearchButton.contentDescription = getString(
+            if (visible) R.string.close_search else R.string.search_event
+        )
+
+        if (visible && requestFocus) {
+            search.requestFocus()
+            search.post {
+                inputMethodManager?.showSoftInput(search, InputMethodManager.SHOW_IMPLICIT)
+            }
+        } else if (!visible) {
+            search.setText("")
+            search.clearFocus()
+            inputMethodManager?.hideSoftInputFromWindow(search.windowToken, 0)
+        }
     }
 
     private fun showSortMenu(anchor: View) {

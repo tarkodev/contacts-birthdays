@@ -26,20 +26,6 @@
         app:strokeWidth="1dp" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/eventAge"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:background="@drawable/age_badge_background"
-        android:elevation="3dp"
-        android:gravity="center"
-        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-        android:textColor="?attr/colorOnSurface"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/eventImage"
-        app:layout_constraintEnd_toEndOf="@id/eventImage"
-        tools:text="36" />
-
-    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/eventPerson"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -60,13 +46,13 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="2dp"
         android:ellipsize="end"
-        android:maxLines="1"
+        android:maxLines="2"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
         android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/eventImage"
         app:layout_constraintTop_toBottomOf="@id/eventPerson"
-        tools:text="Anniversaire : 27 août 1990" />
+        tools:text="Anniversaire : 27 août 1990 · 35 → 36 ans" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/eventCountdown"
