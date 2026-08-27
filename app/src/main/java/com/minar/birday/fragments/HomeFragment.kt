@@ -95,7 +95,7 @@ class HomeFragment : Fragment() {
             onItemLongClick = ::onItemLongClick,
             onNoteClick = ::showNoteDialog,
             onZodiacClick = ::showZodiacName,
-            onNotificationClick = ::toggleNotifications
+            onNotificationClick = ::showReminderDialog
         )
     }
 
@@ -281,12 +281,41 @@ class HomeFragment : Fragment() {
         Toast.makeText(requireContext(), signName, Toast.LENGTH_SHORT).show()
     }
 
-    private fun toggleNotifications(event: EventResult) {
-        if (event.notificationsEnabled) {
-            setNotificationsEnabled(event, false)
-            return
-        }
+    private fun showReminderDialog(event: EventResult) {
+        val personName = formatName(
+            event,
+            sharedPrefs.getBoolean("surname_first", false)
+        )
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.contact_reminder_title, personName))
+            .setIcon(
+                if (event.notificationsEnabled) {
+                    R.drawable.ic_contact_reminder_on_24dp
+                } else {
+                    R.drawable.ic_contact_reminder_off_24dp
+                }
+            )
+            .setMessage(
+                if (event.notificationsEnabled) {
+                    R.string.contact_reminder_disable_message
+                } else {
+                    R.string.contact_reminder_enable_message
+                }
+            )
+            .setPositiveButton(
+                if (event.notificationsEnabled) R.string.disable else R.string.enable
+            ) { _, _ ->
+                if (event.notificationsEnabled) {
+                    setNotificationsEnabled(event, false)
+                } else {
+                    requestNotificationPermissionOrEnable(event)
+                }
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
 
+    private fun requestNotificationPermissionOrEnable(event: EventResult) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
             ContextCompat.checkSelfPermission(
                 requireContext(),
@@ -302,22 +331,6 @@ class HomeFragment : Fragment() {
 
     private fun setNotificationsEnabled(event: EventResult, enabled: Boolean) {
         mainViewModel.updateNotifications(event.id, enabled)
-        val personName = formatName(
-            event,
-            sharedPrefs.getBoolean("surname_first", false)
-        )
-        Toast.makeText(
-            requireContext(),
-            getString(
-                if (enabled) {
-                    R.string.contact_notifications_enabled
-                } else {
-                    R.string.contact_notifications_disabled
-                },
-                personName
-            ),
-            Toast.LENGTH_SHORT
-        ).show()
     }
 
     private fun openAppNotificationSettings() {

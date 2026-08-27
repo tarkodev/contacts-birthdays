@@ -318,8 +318,11 @@
     <string name="event_zodiac_action">Zodiac sign: %1$s</string>
     <string name="enable_contact_notifications">Enable notifications for %1$s</string>
     <string name="disable_contact_notifications">Disable notifications for %1$s</string>
-    <string name="contact_notifications_enabled">Notifications enabled for %1$s</string>
-    <string name="contact_notifications_disabled">Notifications disabled for %1$s</string>
+    <string name="contact_reminder_title">Reminder for %1$s</string>
+    <string name="contact_reminder_enable_message">Receive a notification on this contact’s birthday.</string>
+    <string name="contact_reminder_disable_message">A notification is scheduled for this contact’s birthday.</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
     <string name="search_no_result_title">No results found</string>
     <string name="search_no_result_description">Your search string doesn\'t match any event that you\'ve added!</string>
     <!-- Notes -->
