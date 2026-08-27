@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         act = activity as MainActivity
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        adapter = EventAdapter(onItemClick = ::onItemClick)
+        adapter = EventAdapter(requireContext(), onItemClick = ::onItemClick)
     }
 
     override fun onCreateView(
@@ -130,8 +130,9 @@ class HomeFragment : Fragment() {
             menu.add(SORT_GROUP, SORT_BY_DATE, 0, R.string.sort_by_date).isCheckable = true
             menu.add(SORT_GROUP, SORT_BY_NAME, 1, R.string.sort_by_name).isCheckable = true
             menu.add(SORT_GROUP, SORT_BY_AGE, 2, R.string.sort_by_age).isCheckable = true
+            menu.add(SORT_GROUP, SORT_BY_ZODIAC, 3, R.string.sort_by_zodiac).isCheckable = true
             menu.setGroupCheckable(SORT_GROUP, true, true)
-            menu.add(0, SORT_REVERSED, 3, R.string.sort_reversed).apply {
+            menu.add(0, SORT_REVERSED, 4, R.string.sort_reversed).apply {
                 isCheckable = true
                 isChecked = reversed
             }
@@ -140,6 +141,7 @@ class HomeFragment : Fragment() {
                     EventSortOrder.DATE -> SORT_BY_DATE
                     EventSortOrder.NAME -> SORT_BY_NAME
                     EventSortOrder.AGE -> SORT_BY_AGE
+                    EventSortOrder.ZODIAC -> SORT_BY_ZODIAC
                 }
             ).isChecked = true
             setOnMenuItemClickListener { item ->
@@ -148,6 +150,7 @@ class HomeFragment : Fragment() {
                         SORT_BY_DATE -> putString(PREF_SORT_ORDER, EventSortOrder.DATE.name)
                         SORT_BY_NAME -> putString(PREF_SORT_ORDER, EventSortOrder.NAME.name)
                         SORT_BY_AGE -> putString(PREF_SORT_ORDER, EventSortOrder.AGE.name)
+                        SORT_BY_ZODIAC -> putString(PREF_SORT_ORDER, EventSortOrder.ZODIAC.name)
                         SORT_REVERSED -> putBoolean(PREF_SORT_REVERSED, !reversed)
                     }
                 }
@@ -215,7 +218,8 @@ class HomeFragment : Fragment() {
         const val SORT_BY_DATE = 1
         const val SORT_BY_NAME = 2
         const val SORT_BY_AGE = 3
-        const val SORT_REVERSED = 4
+        const val SORT_BY_ZODIAC = 4
+        const val SORT_REVERSED = 5
         const val PREF_SORT_ORDER = "home_sort_order"
         const val PREF_SORT_REVERSED = "home_sort_reversed"
     }

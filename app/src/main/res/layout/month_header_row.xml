@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/eventDateHeader"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorSurfaceVariant"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingHorizontal="20dp"
-    android:paddingVertical="8dp"
-    android:text="@string/insert_date_hint"
-    android:textAllCaps="true"
-    android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
-    android:textColor="?attr/colorOnSurfaceVariant"
-    android:textStyle="bold" />
+    android:paddingVertical="8dp">
+
+    <ImageView
+        android:id="@+id/eventHeaderIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@null"
+        android:importantForAccessibility="no"
+        android:visibility="gone" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/eventDateHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/insert_date_hint"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        android:textStyle="bold" />
+
+</LinearLayout>

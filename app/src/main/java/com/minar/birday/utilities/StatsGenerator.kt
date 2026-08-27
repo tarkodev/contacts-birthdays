@@ -376,45 +376,13 @@ class StatsGenerator(
 
     // Get the zodiac sign
     fun getZodiacSign(person: EventResult): String {
-        var sign = ""
-        when (getZodiacSignNumber(person)) {
-            0 -> sign = applicationContext?.getString(R.string.zodiac_sagittarius).toString()
-            1 -> sign = applicationContext?.getString(R.string.zodiac_capricorn).toString()
-            2 -> sign = applicationContext?.getString(R.string.zodiac_aquarius).toString()
-            3 -> sign = applicationContext?.getString(R.string.zodiac_pisces).toString()
-            4 -> sign = applicationContext?.getString(R.string.zodiac_aries).toString()
-            5 -> sign = applicationContext?.getString(R.string.zodiac_taurus).toString()
-            6 -> sign = applicationContext?.getString(R.string.zodiac_gemini).toString()
-            7 -> sign = applicationContext?.getString(R.string.zodiac_cancer).toString()
-            8 -> sign = applicationContext?.getString(R.string.zodiac_leo).toString()
-            9 -> sign = applicationContext?.getString(R.string.zodiac_virgo).toString()
-            10 -> sign = applicationContext?.getString(R.string.zodiac_libra).toString()
-            11 -> sign = applicationContext?.getString(R.string.zodiac_scorpio).toString()
-        }
-        return sign
+        val sign = zodiacSignFor(person.originalDate)
+        return applicationContext?.getString(sign.labelRes).toString()
     }
 
     // Only return the number of the sign
-    fun getZodiacSignNumber(person: EventResult): Int {
-        val day = person.originalDate.dayOfMonth
-        val month = person.originalDate.month.value
-        var signNumber = 0
-        when (month) {
-            12 -> signNumber = if (day <= 21) 0 else 1
-            1 -> signNumber = if (day <= 20) 1 else 2
-            2 -> signNumber = if (day <= 18) 2 else 3
-            3 -> signNumber = if (day <= 20) 3 else 4
-            4 -> signNumber = if (day <= 20) 4 else 5
-            5 -> signNumber = if (day <= 20) 5 else 6
-            6 -> signNumber = if (day <= 21) 6 else 7
-            7 -> signNumber = if (day <= 22) 7 else 8
-            8 -> signNumber = if (day <= 23) 8 else 9
-            9 -> signNumber = if (day <= 22) 9 else 10
-            10 -> signNumber = if (day <= 22) 10 else 11
-            11 -> signNumber = if (day <= 22) 11 else 0
-        }
-        return signNumber
-    }
+    fun getZodiacSignNumber(person: EventResult): Int =
+        zodiacSignFor(person.originalDate).legacyIndex
 
     // Evaluate the result, differently from maxBy. If there's a tie, return an empty string
     private fun evaluateResult(map: Map<String, Int>): String {

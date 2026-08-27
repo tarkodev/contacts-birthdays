@@ -16,6 +16,7 @@
     <string name="sort_by_date">By date</string>
     <string name="sort_by_name">By name</string>
     <string name="sort_by_age">By age</string>
+    <string name="sort_by_zodiac">By zodiac sign</string>
     <string name="sort_reversed">Reverse</string>
     <string name="contact_photo">Contact photo</string>
     <string name="open_contact">Open contact</string>

@@ -21,6 +21,8 @@ import com.minar.birday.utilities.formatName
 import com.minar.birday.utilities.getNextYears
 import com.minar.birday.utilities.getRemainingDays
 import com.minar.birday.utilities.setEventImageOrPlaceholder
+import com.minar.birday.utilities.zodiacSignFor
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.format.TextStyle
@@ -32,14 +34,14 @@ private const val ITEM_VIEW_TYPE_EVENT = 1
 enum class EventSortOrder {
     DATE,
     NAME,
-    AGE
+    AGE,
+    ZODIAC
 }
 
 class EventAdapter(
+    private val context: Context,
     private val onItemClick: (position: Int) -> Unit
 ) : ListAdapter<EventDataItem, RecyclerView.ViewHolder>(EventsDiffCallback()) {
-    private lateinit var context: Context
-
     override fun getItemViewType(position: Int): Int = when (getItem(position)) {
         is EventDataItem.IndexHeader -> ITEM_VIEW_TYPE_HEADER
         is EventDataItem.EventItem -> ITEM_VIEW_TYPE_EVENT
@@ -74,6 +76,13 @@ class EventAdapter(
                     { formatName(it, surnameFirst) }
                 )
             )
+            EventSortOrder.ZODIAC -> list.sortedWith(
+                compareBy<EventResult>(
+                    { zodiacSignFor(it.originalDate).ordinal },
+                    { it.nextDate ?: LocalDate.MAX },
+                    { formatName(it, surnameFirst) }
+                )
+            )
         }.let { if (reversed) it.reversed() else it }
 
         if (sortOrder == EventSortOrder.NAME) {
@@ -100,14 +109,28 @@ class EventAdapter(
                 }
                 organizedEvents.add(EventDataItem.EventItem(event))
             }
-        } else {
+        } else if (sortOrder == EventSortOrder.AGE) {
             organizedEvents.addAll(sortedEvents.map(EventDataItem::EventItem))
+        } else {
+            var previousSign = -1
+            sortedEvents.forEach { event ->
+                val sign = zodiacSignFor(event.originalDate)
+                if (sign.ordinal != previousSign) {
+                    organizedEvents.add(
+                        EventDataItem.IndexHeader(
+                            headerTitle = context.getString(sign.labelRes),
+                            iconRes = sign.iconRes
+                        )
+                    )
+                    previousSign = sign.ordinal
+                }
+                organizedEvents.add(EventDataItem.EventItem(event))
+            }
         }
         submitList(organizedEvents) { onCommitted?.invoke() }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        context = parent.context
         return when (viewType) {
             ITEM_VIEW_TYPE_EVENT -> EventViewHolder(
                 EventRowBinding.inflate(LayoutInflater.from(context), parent, false)
@@ -131,9 +154,12 @@ class EventAdapter(
     inner class IndexHeaderViewHolder(binding: MonthHeaderRowBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val monthHeaderText = binding.eventDateHeader
+        private val headerIcon = binding.eventHeaderIcon
 
         fun bind(indexHeader: EventDataItem.IndexHeader) {
             monthHeaderText.text = indexHeader.headerTitle
+            headerIcon.visibility = if (indexHeader.iconRes == null) View.GONE else View.VISIBLE
+            indexHeader.iconRes?.let(headerIcon::setImageResource)
         }
     }
 

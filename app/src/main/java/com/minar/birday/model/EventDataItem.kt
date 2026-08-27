@@ -6,8 +6,11 @@ sealed class EventDataItem {
         override val id = eventResult.id.toLong()
     }
 
-    data class IndexHeader(val headerTitle: String) : EventDataItem() {
-        override val id = Long.MIN_VALUE
+    data class IndexHeader(
+        val headerTitle: String,
+        val iconRes: Int? = null
+    ) : EventDataItem() {
+        override val id = Long.MIN_VALUE + (headerTitle.hashCode().toLong() and 0xffffffffL)
     }
 
     abstract val id: Long
