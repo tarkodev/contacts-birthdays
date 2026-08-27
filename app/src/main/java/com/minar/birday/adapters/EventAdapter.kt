@@ -247,9 +247,9 @@ class EventAdapter(
             eventZodiacAction.setImageResource(zodiacSign.iconRes)
             eventNotificationAction.setImageResource(
                 if (event.notificationsEnabled) {
-                    R.drawable.ic_notifications_24dp
+                    R.drawable.ic_contact_reminder_on_24dp
                 } else {
-                    R.drawable.ic_notifications_none_24dp
+                    R.drawable.ic_contact_reminder_off_24dp
                 }
             )
             eventNoteAction.contentDescription = context.getString(
@@ -272,11 +272,14 @@ class EventAdapter(
                 eventNoteAction,
                 if (event.notes.isNullOrBlank()) R.attr.colorOnSurfaceVariant else R.attr.colorPrimary
             )
-            tintAction(eventZodiacAction, R.attr.colorPrimary)
+            tintAction(eventZodiacAction, R.attr.colorOnSurfaceVariant)
             tintAction(
                 eventNotificationAction,
                 if (event.notificationsEnabled) R.attr.colorPrimary else R.attr.colorOnSurfaceVariant
             )
+            eventNoteAction.alpha = if (event.notes.isNullOrBlank()) 0.72f else 1f
+            eventZodiacAction.alpha = 0.6f
+            eventNotificationAction.alpha = if (event.notificationsEnabled) 1f else 0.72f
             val dateDescription = if (showAgeProgression) {
                 context.getString(
                     R.string.event_date_with_age_description,
