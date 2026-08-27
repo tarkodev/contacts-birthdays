@@ -13,7 +13,9 @@
     <string name="home_events_title">Anniversaires</string>
     <string name="sort_events">Trier les anniversaires</string>
     <string name="sort_by_date">Par date</string>
-    <string name="sort_by_name">Par nom</string>
+    <string name="sort_by_name">De nom</string>
+    <string name="sort_by_age">Par âge</string>
+    <string name="sort_reversed">Inverser</string>
     <string name="contact_photo">Photo du contact</string>
     <string name="open_contact">Ouvrir le contact</string>
     <string name="event_date_line">%1$s : %2$s</string>

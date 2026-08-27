@@ -20,6 +20,7 @@ import androidx.preference.PreferenceManager
 import com.minar.birday.R
 import com.minar.birday.activities.MainActivity
 import com.minar.birday.adapters.EventAdapter
+import com.minar.birday.adapters.EventSortOrder
 import com.minar.birday.databinding.FragmentHomeBinding
 import com.minar.birday.model.EventDataItem
 import com.minar.birday.model.EventResult
@@ -123,27 +124,63 @@ class HomeFragment : Fragment() {
     }
 
     private fun showSortMenu(anchor: View) {
-        val orderAlphabetically = sharedPrefs.getBoolean("order_alphabetically", false)
+        val sortOrder = getSortOrder()
+        val reversed = sharedPrefs.getBoolean(PREF_SORT_REVERSED, false)
         PopupMenu(requireContext(), anchor).apply {
-            menu.add(0, SORT_BY_DATE, 0, R.string.sort_by_date).isCheckable = true
-            menu.add(0, SORT_BY_NAME, 1, R.string.sort_by_name).isCheckable = true
-            menu.findItem(if (orderAlphabetically) SORT_BY_NAME else SORT_BY_DATE).isChecked = true
+            menu.add(SORT_GROUP, SORT_BY_DATE, 0, R.string.sort_by_date).isCheckable = true
+            menu.add(SORT_GROUP, SORT_BY_NAME, 1, R.string.sort_by_name).isCheckable = true
+            menu.add(SORT_GROUP, SORT_BY_AGE, 2, R.string.sort_by_age).isCheckable = true
+            menu.setGroupCheckable(SORT_GROUP, true, true)
+            menu.add(0, SORT_REVERSED, 3, R.string.sort_reversed).apply {
+                isCheckable = true
+                isChecked = reversed
+            }
+            menu.findItem(
+                when (sortOrder) {
+                    EventSortOrder.DATE -> SORT_BY_DATE
+                    EventSortOrder.NAME -> SORT_BY_NAME
+                    EventSortOrder.AGE -> SORT_BY_AGE
+                }
+            ).isChecked = true
             setOnMenuItemClickListener { item ->
-                val alphabetical = item.itemId == SORT_BY_NAME
-                sharedPrefs.edit { putBoolean("order_alphabetically", alphabetical) }
-                submitCurrentEvents()
+                sharedPrefs.edit {
+                    when (item.itemId) {
+                        SORT_BY_DATE -> putString(PREF_SORT_ORDER, EventSortOrder.DATE.name)
+                        SORT_BY_NAME -> putString(PREF_SORT_ORDER, EventSortOrder.NAME.name)
+                        SORT_BY_AGE -> putString(PREF_SORT_ORDER, EventSortOrder.AGE.name)
+                        SORT_REVERSED -> putBoolean(PREF_SORT_REVERSED, !reversed)
+                    }
+                }
+                submitCurrentEvents(scrollToTop = true)
                 true
             }
             show()
         }
     }
 
-    private fun submitCurrentEvents() {
+    private fun submitCurrentEvents(scrollToTop: Boolean = false) {
         adapter.prepareAndSubmitList(
             currentEvents,
-            orderAlphabetically = sharedPrefs.getBoolean("order_alphabetically", false),
-            surnameFirst = sharedPrefs.getBoolean("surname_first", false)
+            sortOrder = getSortOrder(),
+            reversed = sharedPrefs.getBoolean(PREF_SORT_REVERSED, false),
+            surnameFirst = sharedPrefs.getBoolean("surname_first", false),
+            onCommitted = if (scrollToTop) {
+                { _binding?.eventRecycler?.scrollToPosition(0) }
+            } else {
+                null
+            }
         )
+    }
+
+    private fun getSortOrder(): EventSortOrder {
+        val savedOrder = sharedPrefs.getString(PREF_SORT_ORDER, null)
+        return savedOrder?.let {
+            runCatching { EventSortOrder.valueOf(it) }.getOrNull()
+        } ?: if (sharedPrefs.getBoolean("order_alphabetically", false)) {
+            EventSortOrder.NAME
+        } else {
+            EventSortOrder.DATE
+        }
     }
 
     private fun onItemClick(position: Int) {
@@ -174,7 +211,12 @@ class HomeFragment : Fragment() {
     }
 
     private companion object {
+        const val SORT_GROUP = 1
         const val SORT_BY_DATE = 1
         const val SORT_BY_NAME = 2
+        const val SORT_BY_AGE = 3
+        const val SORT_REVERSED = 4
+        const val PREF_SORT_ORDER = "home_sort_order"
+        const val PREF_SORT_REVERSED = "home_sort_reversed"
     }
 }

@@ -29,6 +29,12 @@ import java.util.Locale
 private const val ITEM_VIEW_TYPE_HEADER = 0
 private const val ITEM_VIEW_TYPE_EVENT = 1
 
+enum class EventSortOrder {
+    DATE,
+    NAME,
+    AGE
+}
+
 class EventAdapter(
     private val onItemClick: (position: Int) -> Unit
 ) : ListAdapter<EventDataItem, RecyclerView.ViewHolder>(EventsDiffCallback()) {
@@ -41,21 +47,36 @@ class EventAdapter(
 
     fun prepareAndSubmitList(
         list: List<EventResult>?,
-        orderAlphabetically: Boolean = false,
-        surnameFirst: Boolean = false
+        sortOrder: EventSortOrder = EventSortOrder.DATE,
+        reversed: Boolean = false,
+        surnameFirst: Boolean = false,
+        onCommitted: (() -> Unit)? = null
     ) {
         if (list.isNullOrEmpty()) {
-            submitList(emptyList())
+            submitList(emptyList()) { onCommitted?.invoke() }
             return
         }
 
         val organizedEvents = mutableListOf<EventDataItem>()
-        if (orderAlphabetically) {
-            val sortedEvents = if (surnameFirst) {
+        val sortedEvents = when (sortOrder) {
+            EventSortOrder.DATE -> list
+            EventSortOrder.NAME -> if (surnameFirst) {
                 list.sortedWith(compareBy({ it.surname.orEmpty() }, { it.name }))
             } else {
                 list.sortedWith(compareBy({ it.name }, { it.surname.orEmpty() }))
             }
+            EventSortOrder.AGE -> list.sortedWith(
+                compareBy<EventResult>(
+                    { it.yearMatter != true },
+                    { if (it.yearMatter == true) it.originalDate.year else Int.MAX_VALUE },
+                    { it.originalDate.monthValue },
+                    { it.originalDate.dayOfMonth },
+                    { formatName(it, surnameFirst) }
+                )
+            )
+        }.let { if (reversed) it.reversed() else it }
+
+        if (sortOrder == EventSortOrder.NAME) {
             var previousLetter: String? = null
             sortedEvents.forEach { event ->
                 val displayedName = formatName(event, surnameFirst)
@@ -66,9 +87,9 @@ class EventAdapter(
                 }
                 organizedEvents.add(EventDataItem.EventItem(event))
             }
-        } else {
+        } else if (sortOrder == EventSortOrder.DATE) {
             var previousMonth: String? = null
-            list.forEach { event ->
+            sortedEvents.forEach { event ->
                 val nextDate = event.nextDate ?: return@forEach
                 val month = nextDate.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
@@ -79,8 +100,10 @@ class EventAdapter(
                 }
                 organizedEvents.add(EventDataItem.EventItem(event))
             }
+        } else {
+            organizedEvents.addAll(sortedEvents.map(EventDataItem::EventItem))
         }
-        submitList(organizedEvents)
+        submitList(organizedEvents) { onCommitted?.invoke() }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
