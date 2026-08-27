@@ -59,7 +59,6 @@ class DetailsFragment : Fragment() {
     private val args: DetailsFragmentArgs by navArgs()
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
-    private var easterEggCounter = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -104,7 +103,7 @@ class DetailsFragment : Fragment() {
         val fullView = binding.detailsMotionLayout
         val shimmer = binding.detailsCountdownShimmer
         val shimmerEnabled = sharedPrefs.getBoolean("shimmer", false)
-        val astrologyDisabled = sharedPrefs.getBoolean("disable_astrology", false)
+        val astrologyDisabled = true
         val hideImage = sharedPrefs.getBoolean("hide_images", false)
         val surnameFirst = sharedPrefs.getBoolean("surname_first", false)
         val titleText = formatName(event, surnameFirst)
@@ -217,17 +216,6 @@ class DetailsFragment : Fragment() {
             R.drawable.animated_balloon,
             1500
         )
-
-        // Small easter egg/motion on the image (with a slight zoom)
-        image.setOnClickListener {
-            easterEggCounter++
-            if (easterEggCounter == 3) {
-                easterEggCounter = 0
-                if (binding.detailsMotionLayout.progress == 0F)
-                    binding.detailsMotionLayout.transitionToEnd()
-                else binding.detailsMotionLayout.transitionToStart()
-            }
-        }
 
         // Setup quick actions and corresponding navigation
         deleteButton.setOnClickListener {

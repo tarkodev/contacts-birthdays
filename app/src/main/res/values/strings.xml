@@ -16,6 +16,7 @@
     <string name="sort_by_date">By date</string>
     <string name="sort_by_name">By name</string>
     <string name="contact_photo">Contact photo</string>
+    <string name="open_contact">Open contact</string>
     <string name="event_date_line">%1$s: %2$s</string>
     <string name="event_row_description">%1$s, %2$s, %3$s</string>
     <string name="no_events">No contact birthday found.</string>
