@@ -64,3 +64,9 @@ gen-external-apklibs
 # Json Output
 app/debug/output.json
 app/release/output.json
+
+# Signing and local secrets
+*.jks
+*.keystore
+keystore.properties
+.env
