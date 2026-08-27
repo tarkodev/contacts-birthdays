@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Birday</string>
+    <string name="app_name" translatable="false">AnnivApp</string>
     <string name="app_welcome">Welcome to Birday</string>
     <string name="app_name_extended">Birday - Event Manager</string>
     <string name="leave_review_title">Review Birday</string>
@@ -8,10 +8,17 @@
     <string name="yes_review">Review!</string>
     <string name="later">Later, I swear</string>
     <string name="no_thanks">No way!</string>
-    <string name="title_home">Home</string>
+    <string name="title_home">Birthdays</string>
     <string name="title_favorites">Favorites</string>
     <string name="title_settings">Settings</string>
-    <string name="no_events">No events! Start adding one using the button below!</string>
+    <string name="home_events_title">Birthdays</string>
+    <string name="sort_events">Sort birthdays</string>
+    <string name="sort_by_date">By date</string>
+    <string name="sort_by_name">By name</string>
+    <string name="contact_photo">Contact photo</string>
+    <string name="event_date_line">%1$s: %2$s</string>
+    <string name="event_row_description">%1$s, %2$s, %3$s</string>
+    <string name="no_events">No contact birthday found.</string>
     <string name="no_favorites">No favorites! Press the star to save an event in your favorites!</string>
     <string name="add_favorite">Add to favorites</string>
     <string name="stats">Statistics</string>
@@ -52,7 +59,7 @@
     <string name="vibration_description_off">No vibrations when a button is pressed</string>
     <string name="date_format_name">Date format</string>
     <string name="notification_hour_name">Notification hour</string>
-    <string name="notification_hour_description">%s \n\nPlease note that the notification might not work when the app is killed by the system in some Huawei, Xiaomi and OnePlus devices. Refer to dontkillmyapp.com for more information</string>
+    <string name="notification_hour_description">%s</string>
     <string name="accent_description">Change the default accent color</string>
     <string name="accent_name">Accent color</string>
     <string name="theme_description">Use a dark, light or automatic app theme</string>
@@ -117,7 +124,7 @@
     <string name="battery_optimization_description">Open the settings to disable any optimization for Birday. Useful if notifications aren\'t working</string>
     <string name="battery_optimization_tutorial">- Show all the apps and find Birday in the list\n- Tap on Birday and select \"Don\'t optimize\"</string>
     <string name="notification_sound_title">Notification sound</string>
-    <string name="notification_sound_description">Shortcut to the notification sound settings, if you don\'t like the default bird sound</string>
+    <string name="notification_sound_description">Choose the sound used for birthday reminders</string>
     <string name="missing_permission_notifications">The notification permission was denied, and Birday can\'t send notifications! Activate the permission from settings.</string>
     <string name="missing_permission_notifications_forever">The notification permission was denied and can\'t be asked again, so Birday can\'t send notifications! Activate the permission manually, from settings.</string>
     <string name="missing_permission_calendar">The calendar permission was denied, and Birday can\'t import from calendar! Activate the permission from settings.</string>

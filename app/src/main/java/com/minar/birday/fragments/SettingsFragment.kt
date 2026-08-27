@@ -10,14 +10,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavController
-import androidx.navigation.fragment.findNavController
 import androidx.preference.MultiSelectListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.minar.birday.R
-import com.minar.birday.activities.MainActivity
 import com.minar.birday.utilities.addInsetsByPadding
 import com.minar.birday.viewmodels.MainViewModel
 import com.minar.birday.widgets.EventWidgetProvider
@@ -30,14 +27,6 @@ class SettingsFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeLis
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
-
-        val experimentalPreference: Preference? = findPreference("experimental")
-        experimentalPreference?.setOnPreferenceClickListener {
-            val navController: NavController =
-                findNavController()
-            navController.navigate(R.id.action_navigationSettings_to_experimentalSettingsFragment)
-            true
-        }
 
         // Set a custom summary provider for the multi selection option
         val additionalNotificationPref =
@@ -94,13 +83,11 @@ class SettingsFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeLis
             }
 
             "accent_color" -> hotReloadActivity(sharedPreferences)
-            "shimmer" -> hotReloadActivity(sharedPreferences)
             "notification_hour" -> mainViewModel.scheduleNextCheck()
             "notification_minute" -> mainViewModel.scheduleNextCheck()
             "surname_first" -> updateWidgets(updateUpcoming = true, updateMinimal = true)
             "hide_images" -> updateWidgets(updateUpcoming = true)
             "multi_additional_notification" -> updateWidgets(updateMinimal = true)
-            "disable_astrology" -> (requireActivity() as MainActivity).forceRefreshStats()
         }
     }
 

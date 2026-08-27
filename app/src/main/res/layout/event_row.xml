@@ -5,84 +5,93 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:hapticFeedbackEnabled="false"
-    android:paddingHorizontal="@dimen/recycler_padding"
-    android:paddingVertical="@dimen/between_row_padding">
+    android:clickable="true"
+    android:focusable="true"
+    android:minHeight="92dp"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/eventImage"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/event_details"
-        android:padding="@dimen/in_row_padding"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:contentDescription="@string/contact_photo"
+        android:scaleType="centerCrop"
         android:src="@drawable/placeholder_birthday_image"
-        app:layout_constraintBottom_toBottomOf="@id/eventDate"
-        app:layout_constraintDimensionRatio="1.0"
-        app:layout_constraintHeight_max="@dimen/in_row_image"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/eventPerson"
-        app:layout_constraintWidth_max="@dimen/in_row_image"
+        app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/roundedImageView"
         app:strokeColor="?attr/colorOutline"
-        app:strokeWidth="@dimen/card_stroke" />
+        app:strokeWidth="1dp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/eventAge"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/age_badge_background"
+        android:elevation="3dp"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+        android:textColor="?attr/colorOnSurface"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/eventImage"
+        app:layout_constraintEnd_toEndOf="@id/eventImage"
+        tools:text="36" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/eventPerson"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/in_row_padding"
-        android:paddingVertical="@dimen/in_row_padding"
+        android:layout_marginStart="16dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="@string/insert_name_hint"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        app:layout_constraintEnd_toStartOf="@id/favoriteButton"
-        app:layout_constraintStart_toStartOf="@id/eventTypeImage"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- The "H" in the ratio means that the width is computed after the height and is based on it-->
-    <ImageView
-        android:id="@+id/eventTypeImage"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/ic_dot_black_24dp"
-        android:backgroundTint="?attr/colorSurfaceVariant"
-        android:contentDescription="@string/event_type_hint"
-        android:maxWidth="@dimen/preview_dot_size"
-        android:maxHeight="@dimen/preview_dot_size"
-        android:padding="@dimen/event_type_badge_padding"
-        android:src="@drawable/ic_anniversary_24dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/eventDate"
-        app:layout_constraintDimensionRatio="H,1"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/eventImage"
-        app:layout_constraintTop_toTopOf="@id/eventDate"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toTopOf="@id/eventImage" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/eventDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/in_row_button_padding"
-        android:paddingVertical="@dimen/in_row_padding"
-        android:text="@string/birth_date"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-        app:layout_constraintEnd_toStartOf="@id/favoriteButton"
-        app:layout_constraintStart_toEndOf="@id/eventTypeImage"
-        app:layout_constraintTop_toBottomOf="@id/eventPerson" />
-
-    <ImageView
-        android:id="@+id/favoriteButton"
-        android:layout_width="@dimen/in_row_image"
-        android:layout_height="@dimen/in_row_image"
-        android:layout_gravity="center"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:contentDescription="@string/add_favorite"
-        android:focusable="true"
-        android:hapticFeedbackEnabled="false"
-        android:paddingVertical="@dimen/in_row_button_padding"
-        android:src="@drawable/animated_favorite_normal_to_favorite"
-        app:layout_constraintBottom_toBottomOf="@id/eventDate"
+        android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/eventPerson" />
+        app:layout_constraintStart_toEndOf="@id/eventImage"
+        app:layout_constraintTop_toBottomOf="@id/eventPerson"
+        tools:text="Anniversaire : 27 août 1990" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/eventCountdown"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/eventImage"
+        app:layout_constraintTop_toBottomOf="@id/eventDate"
+        tools:text="Aujourd'hui" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="6dp"
+        android:alpha="0.35"
+        android:background="?attr/colorOutline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/eventPerson"
+        app:layout_constraintTop_toBottomOf="@id/eventCountdown" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

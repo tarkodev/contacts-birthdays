@@ -7,10 +7,17 @@
     <string name="yes_review">Évaluer !</string>
     <string name="later">Plus tard, promis.</string>
     <string name="no_thanks">Pas question !</string>
-    <string name="title_home">Accueil</string>
+    <string name="title_home">Anniversaires</string>
     <string name="title_favorites">Mes favoris</string>
     <string name="title_settings">Réglages</string>
-    <string name="no_events">Il n\'y a aucun événement ! Ajoutez-en un en cliquant sur le bouton ci-dessous !</string>
+    <string name="home_events_title">Anniversaires</string>
+    <string name="sort_events">Trier les anniversaires</string>
+    <string name="sort_by_date">Par date</string>
+    <string name="sort_by_name">Par nom</string>
+    <string name="contact_photo">Photo du contact</string>
+    <string name="event_date_line">%1$s : %2$s</string>
+    <string name="event_row_description">%1$s, %2$s, %3$s</string>
+    <string name="no_events">Aucun anniversaire trouvé dans les contacts.</string>
     <string name="no_favorites">Il n\'y a rien ici ! Cliquer sur l\'étoile pour ajouter un événement à vos favoris !</string>
     <string name="add_favorite">Ajouter aux favoris</string>
     <string name="stats">Statistiques</string>
@@ -51,7 +58,7 @@
     <string name="vibration_description_off">Ne vibre à aucun appui sur un bouton</string>
     <string name="date_format_name">Format de la date</string>
     <string name="notification_hour_name">Horaire de notification</string>
-    <string name="notification_hour_description">%s \n\nVeuillez garder à l\'esprit que l\'envoi de notification peut ne pas fonctionner si l\'application est tuée par le système. Cela peut être le cas sur certains téléphones Huawei, Xiaomi ou OnePlus. Rendez-vous sur dontkillmyapp.com pour plus d\'informations.</string>
+    <string name="notification_hour_description">%s</string>
     <string name="accent_description">Changer la couleur d\'accentuation par défaut</string>
     <string name="accent_name">Couleur d\'accentuation</string>
     <string name="theme_description">Utiliser un thème sombre, clair ou automatique</string>
@@ -111,7 +118,7 @@
     <string name="battery_optimization_description">Ouvrez les paramètres pour désactiver toute optimisation pour Birday. Utile si les notifications ne fonctionnent pas</string>
     <string name="battery_optimization_tutorial">- Afficher toutes les applications et trouver Birday dans la liste\n- Tapez sur Birday et sélectionnez \"Ne pas optimiser\"</string>
     <string name="notification_sound_title">Son de notification</string>
-    <string name="notification_sound_description">Raccourci vers les paramètres de son de notification, si vous n\'aimez pas le son d\'oiseau par défaut</string>
+    <string name="notification_sound_description">Choisir le son utilisé pour les rappels d\'anniversaire</string>
     <string name="missing_permission_notifications">L\'autorisation d\'envoyer des notifications a été refusée, Birday ne peut pas envoyer de notifications. Merci d\'activer l\'autorisation depuis les paramètres.</string>
     <string name="missing_permission_notifications_forever">L\'autorisation d\'envoyer des notifications a été refusée et ne peut pas être redemandée, Birday ne peut pas envoyer de notifications. Merci d\'activer l\'autorisation manuellement depuis les paramètres.</string>
     <string name="missing_permission_calendar">L\'autorisation d\'accéder au calendrier a été refusée, Birday ne peut pas importer depuis le calendrier. Merci d\'activer l\'autorisation depuis les paramètres.</string>

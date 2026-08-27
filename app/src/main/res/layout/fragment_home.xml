@@ -1,248 +1,81 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Focusable in touch mode removes the default focus from the search bar when focused for the first time -->
-<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/homeMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
-    android:transitionGroup="true"
-    app:layoutDescription="@xml/fragment_home_scene">
+    android:focusableInTouchMode="true">
 
-    <nl.dionsegijn.konfetti.KonfettiView
-        android:id="@+id/confettiView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/homeCard"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/homeTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/card_margin"
-        android:layout_marginTop="@dimen/linear_vertical_margin"
-        android:clickable="true"
-        android:focusable="true"
-        app:cardCornerRadius="@dimen/rounded_corners"
-        app:cardElevation="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/home_events_title"
+        android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/homeSortButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/homeSortButton"
+        style="@style/Widget.Material3Expressive.Button.IconButton.Outlined"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="12dp"
+        android:contentDescription="@string/sort_events"
+        app:icon="@drawable/ic_sort_24dp"
+        app:iconTint="?attr/colorOnSurface"
+        app:layout_constraintBottom_toBottomOf="@id/homeTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/homeTitle" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/homeSearchLayout"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:hint="@string/search_event"
+        app:boxBackgroundColor="?attr/colorSurfaceVariant"
+        app:boxCornerRadiusBottomEnd="18dp"
+        app:boxCornerRadiusBottomStart="18dp"
+        app:boxCornerRadiusTopEnd="18dp"
+        app:boxCornerRadiusTopStart="18dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:endIconMode="clear_text"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:rippleColor="?attr/colorSecondary"
-        app:strokeColor="?attr/colorOutline"
-        app:strokeWidth="@dimen/card_stroke">
+        app:layout_constraintTop_toBottomOf="@id/homeTitle"
+        app:startIconContentDescription="@string/search_event"
+        app:startIconDrawable="@drawable/ic_person_search_24dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/homeSearch"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="@dimen/card_padding">
+            android:layout_height="52dp"
+            android:hint="@string/search_event"
+            android:inputType="textPersonName"
+            android:maxLines="1"
+            android:textCursorDrawable="@drawable/custom_cursor" />
 
-            <!-- Duration and repeat delay must be hardcoded -->
-            <com.facebook.shimmer.ShimmerFrameLayout
-                android:id="@+id/homeCardShimmer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:shimmer_auto_start="false"
-                app:shimmer_base_alpha="@dimen/shimmer_base_alpha"
-                app:shimmer_dropoff="@dimen/shimmer_dropoff"
-                app:shimmer_duration="600"
-                app:shimmer_highlight_alpha="@dimen/shimmer_highlight_alpha"
-                app:shimmer_intensity="@dimen/shimmer_intensity"
-                app:shimmer_repeat_delay="2400"
-                app:shimmer_repeat_mode="reverse"
-                app:shimmer_tilt="@dimen/shimmer_tilt">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/text_field_horizontal_margin"
-                    android:paddingVertical="@dimen/text_field_horizontal_margin">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/upcomingTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/card_image_padding"
-                        android:text="@string/next_event"
-                        android:textAppearance="?attr/textAppearanceHeadline6"
-                        app:layout_constraintEnd_toStartOf="@+id/homeCardGuideline"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/upcomingSubtitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/card_margin"
-                        android:layout_marginEnd="@dimen/card_image_padding"
-                        android:text="@string/no_next_event"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="?android:attr/textColorSecondary"
-                        app:layout_constraintEnd_toStartOf="@+id/homeCardGuideline"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/upcomingTitle" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/upcomingDescription"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/card_margin"
-                        android:layout_marginEnd="@dimen/card_image_padding"
-                        android:text="@string/no_next_event_description"
-                        android:textAppearance="?attr/textAppearanceBody2"
-                        android:textColor="?android:attr/textColorSecondary"
-                        app:layout_constraintEnd_toStartOf="@+id/homeCardGuideline"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/upcomingSubtitle" />
-
-                    <!-- Media -->
-                    <ImageView
-                        android:id="@+id/upcomingImage"
-                        android:layout_width="@dimen/card_image_height"
-                        android:layout_height="@dimen/card_image_height"
-                        android:layout_gravity="center"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/animated_party_popper"
-                        app:layout_constraintBottom_toBottomOf="@id/upcomingDescription"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/homeCardGuideline"
-                        app:layout_constraintTop_toTopOf="@id/upcomingTitle" />
-
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/homeCardGuideline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_percent=".78" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.facebook.shimmer.ShimmerFrameLayout>
-
-            <!-- TODO Buggy box stroke color, is the higher width when focused a good choice? -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/homeSearchLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/search_event"
-                app:boxBackgroundColor="@android:color/transparent"
-                app:boxCornerRadiusBottomEnd="@dimen/rounded_corners"
-                app:boxCornerRadiusBottomStart="@dimen/rounded_corners"
-                app:boxCornerRadiusTopEnd="@dimen/rounded_corners"
-                app:boxCornerRadiusTopStart="@dimen/rounded_corners"
-                app:boxStrokeWidth="@dimen/card_stroke"
-                app:boxStrokeWidthFocused="3dp"
-                app:endIconContentDescription="@string/cancel"
-                app:endIconDrawable="@drawable/ic_arrow_left_24dp"
-                app:endIconMode="custom"
-                app:endIconTint="?attr/colorPrimary"
-                app:hintEnabled="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/homeCardShimmer"
-                app:startIconContentDescription="@string/search_event"
-                app:startIconDrawable="@drawable/ic_person_search_24dp"
-                app:startIconTint="?attr/colorPrimary">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/homeSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:hint="@string/search_event"
-                    android:inputType="textPersonName"
-                    android:maxLength="25"
-                    android:padding="0dp"
-                    android:textCursorDrawable="@drawable/custom_cursor" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButtonToggleGroup
-                android:id="@+id/homeTypeSelector"
-                style="@style/Widget.Material3.MaterialButtonGroup.Connected"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="?attr/colorSurface"
-                android:spacing="0dp"
-                android:visibility="gone"
-                app:innerCornerSize="0dp"
-                app:layout_constraintBottom_toBottomOf="@id/homeSearchLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/homeSearchLayout"
-                app:shapeAppearance="@style/ShapeAppearance.App.SmallComponent"
-                app:singleSelection="true">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/homeTypeSelectorBirthday"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/birthday"
-                    app:icon="@drawable/ic_party_24dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/homeTypeSelectorAnniversary"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/anniversary"
-                    app:icon="@drawable/ic_anniversary_24dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/homeTypeSelectorDeathAnniversary"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/death_anniversary"
-                    app:icon="@drawable/ic_death_anniversary_24dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/homeTypeSelectorNameDay"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/name_day"
-                    app:icon="@drawable/ic_name_day_24dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/homeTypeSelectorOther"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/other"
-                    app:icon="@drawable/ic_other_24dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/homeTypeSelectorClose"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@android:string/cancel"
-                    app:backgroundTint="?attr/colorSurfaceVariant"
-                    app:icon="@drawable/ic_arrow_right_24dp"
-                    app:iconTint="?attr/colorPrimary" />
-
-            </com.google.android.material.button.MaterialButtonToggleGroup>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </com.google.android.material.card.MaterialCardView>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/noEvents"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:autoSizeTextType="uniform"
         android:gravity="center"
         android:maxLines="3"
-        android:paddingHorizontal="@dimen/placeholders_padding"
-        android:scrollbarSize="0dp"
+        android:paddingHorizontal="48dp"
         android:text="@string/no_events"
         android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
         android:textColor="?attr/colorOutline"
@@ -251,47 +84,21 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/homeCard" />
+        app:layout_constraintTop_toBottomOf="@id/homeSearchLayout" />
 
-    <!-- The effect of overScrollMode = ifContentScrolls is bad on Android < 12 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/eventRecycler"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:overScrollMode="never"
-        android:paddingTop="@dimen/recycler_extra_space_top"
-        android:paddingBottom="@dimen/recycler_extra_space_bottom"
+        android:overScrollMode="ifContentScrolls"
+        android:paddingTop="8dp"
+        android:paddingBottom="12dp"
         android:scrollbarSize="0dp"
-        android:scrollbarStyle="outsideOverlay"
-        app:fastScrollEnabled="true"
-        app:fastScrollHorizontalThumbDrawable="@drawable/scroll_thumb_drawable"
-        app:fastScrollHorizontalTrackDrawable="@drawable/scroll_line_drawable"
-        app:fastScrollVerticalThumbDrawable="@drawable/scroll_thumb_drawable"
-        app:fastScrollVerticalTrackDrawable="@drawable/scroll_line_drawable"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/homeCard" />
+        app:layout_constraintTop_toBottomOf="@id/homeSearchLayout" />
 
-    <Button
-        android:id="@+id/homeMiniFab"
-        style="@style/Widget.Material3Expressive.Button.IconButton.Outlined"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hapticFeedbackEnabled="false"
-        app:backgroundTint="?attr/colorSurface"
-        app:elevation="@dimen/bottom_navbar_elevation"
-        app:icon="@drawable/ic_arrow_up_24dp"
-        app:iconTint="?attr/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@id/homeCard"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/homeCard"
-        app:rippleColor="?attr/colorSecondary"
-        app:strokeColor="?attr/colorOutline"
-        app:strokeWidth="@dimen/card_stroke" />
-
-
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

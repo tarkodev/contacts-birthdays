@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!-- Header containing the month, to separate events in different months in the list -->
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.textview.MaterialTextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/eventDateHeader"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/preview_dot_size"
-    android:layout_marginVertical="@dimen/between_row_padding"
-    android:background="@drawable/custom_cursor"
-    android:backgroundTint="?attr/colorSurfaceVariant"
-    android:drawablePadding="@dimen/in_row_padding"
-    android:gravity="center_vertical"
-    android:paddingStart="@dimen/in_row_padding"
-    android:paddingEnd="@dimen/text_field_horizontal_margin"
+    android:background="?attr/colorSurfaceVariant"
+    android:paddingHorizontal="20dp"
+    android:paddingVertical="8dp"
     android:text="@string/insert_date_hint"
     android:textAllCaps="true"
-    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-    android:textColor="?attr/colorOutline"
-    app:drawableLeftCompat="@drawable/ic_dot_small_24dp" />
+    android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+    android:textColor="?attr/colorOnSurfaceVariant"
+    android:textStyle="bold" />

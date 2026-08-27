@@ -2,10 +2,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.minar.birday.preferences.standard.CustomAuthorPreference
-        android:layout="@layout/author_preference_row"
-        android:selectable="false" />
-
     <PreferenceCategory
         android:key="notifications"
         android:title="@string/events_notification_channel"
@@ -21,24 +17,6 @@
             android:entryValues="@array/additionalNotificationValues"
             android:key="multi_additional_notification"
             android:title="@string/additional_notification_name"
-            app:iconSpaceReserved="false" />
-
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="notification_only_favorites"
-            android:summaryOff="@string/notification_only_favorites_description_off"
-            android:summaryOn="@string/notification_only_favorites_description_on"
-            android:title="@string/notification_only_favorites"
-            android:widgetLayout="@layout/preference_switch_widget"
-            app:iconSpaceReserved="false" />
-
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="additional_only_favorites"
-            android:summaryOff="@string/additional_notification_only_favorites_description_off"
-            android:summaryOn="@string/additional_notification_only_favorites_description_on"
-            android:title="@string/additional_notification_only_favorites"
-            android:widgetLayout="@layout/preference_switch_widget"
             app:iconSpaceReserved="false" />
 
         <com.minar.birday.preferences.standard.NotificationSoundPreference
@@ -70,26 +48,6 @@
             android:widgetLayout="@layout/preference_switch_widget"
             app:iconSpaceReserved="false" />
 
-        <!-- Disable astrology information -->
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="disable_astrology"
-            android:summaryOff="@string/disable_astrology_description_off"
-            android:summaryOn="@string/disable_astrology_description_on"
-            android:title="@string/disable_astrology_title"
-            android:widgetLayout="@layout/preference_switch_widget"
-            app:iconSpaceReserved="false" />
-
-        <!-- Advanced yearly calendar mode -->
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="advanced_overview"
-            android:summaryOff="@string/advanced_overview_description_off"
-            android:summaryOn="@string/advanced_overview_description_on"
-            android:title="@string/advanced_overview_title"
-            android:widgetLayout="@layout/preference_switch_widget"
-            app:iconSpaceReserved="false" />
-
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -116,15 +74,6 @@
             app:iconSpaceReserved="false" />
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="shimmer"
-            android:summaryOff="@string/shimmer_description_off"
-            android:summaryOn="@string/shimmer_description_on"
-            android:title="@string/shimmer_name"
-            android:widgetLayout="@layout/preference_switch_widget"
-            app:iconSpaceReserved="false" />
-
-        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="vibration"
             android:summaryOff="@string/vibration_description_off"
@@ -139,20 +88,8 @@
         android:title="@string/import_export"
         app:icon="@drawable/ic_backup_restore_24dp">
 
-        <com.minar.birday.preferences.backup.BirdayExporter
-            android:layout="@layout/birday_export_row"
-            android:selectable="true" />
-
-        <com.minar.birday.preferences.backup.BirdayImporter
-            android:layout="@layout/birday_import_row"
-            android:selectable="true" />
-
         <com.minar.birday.preferences.backup.ContactsImporter
             android:layout="@layout/contacts_import_row"
-            android:selectable="true" />
-
-        <com.minar.birday.preferences.backup.CalendarImporter
-            android:layout="@layout/calendar_import_row"
             android:selectable="true" />
 
         <!-- Auto import on each start -->
@@ -175,23 +112,6 @@
         <com.minar.birday.preferences.standard.DisableOptimizationsPreference
             android:layout="@layout/disable_optimizations_row"
             android:selectable="true" />
-
-        <!-- Angry bird mode for notifications (and possibly more?) -->
-        <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:key="angry_bird"
-            android:summaryOff="@string/angry_bird_description_off"
-            android:summaryOn="@string/angry_bird_description_on"
-            android:title="@string/angry_bird_title"
-            android:widgetLayout="@layout/preference_switch_widget"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            android:key="experimental"
-            android:persistent="false"
-            android:summary="@string/experimental_settings_description"
-            android:title="@string/experimental_settings_title"
-            app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 

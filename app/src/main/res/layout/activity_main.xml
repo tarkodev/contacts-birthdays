@@ -34,7 +34,7 @@
             android:background="@android:color/transparent"
             app:itemPaddingBottom="@dimen/bottom_navbar_item_padding"
             app:itemPaddingTop="@dimen/bottom_navbar_item_padding"
-            app:labelVisibilityMode="selected"
+            app:labelVisibilityMode="labeled"
             app:menu="@menu/navigation_bottomappbar" />
 
     </com.google.android.material.bottomappbar.BottomAppBar>
@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/new_event"
         android:hapticFeedbackEnabled="false"
+        android:visibility="gone"
         app:layout_anchor="@id/navigation"
         app:maxImageSize="@dimen/main_fab_icon_size"
         app:srcCompat="@drawable/ic_party_24dp"
