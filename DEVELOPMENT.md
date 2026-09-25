@@ -1,4 +1,4 @@
-# AnnivApp development guide
+# Birthdays development guide
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ Gradle version, so use the helper scripts or set `JAVA_HOME` to JDK 17.
 ## Build and static validation
 
 ```powershell
-Set-Location D:\Dev\AnnivApp
+Set-Location 'C:\path\to\contacts-birthdays'
 .\scripts\windows\build-and-test.ps1
 ```
 
@@ -64,7 +64,7 @@ contacts for automated testing. The repeatable local setup is:
 
 The script replaces only contacts stored under its dedicated `AnnivAppTest`
 test account. It does not delete personal or unrelated emulator contacts. A
-debug-only instrumentation helper attaches the portraits and updates AnnivApp's
+debug-only instrumentation helper attaches the portraits and updates Birthdays'
 test events immediately; the release manifest does not request contact-write
 access.
 

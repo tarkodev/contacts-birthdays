@@ -1,6 +1,6 @@
 # Fictional contact fixtures
 
-`contacts.vcf` contains synthetic data created exclusively for AnnivApp tests.
+`contacts.vcf` contains synthetic data created exclusively for Birthdays tests.
 The names and dates are fictional and must not be replaced with personal data.
 
 `profile-photos` contains 15 AI-generated fictional adult portraits. They do

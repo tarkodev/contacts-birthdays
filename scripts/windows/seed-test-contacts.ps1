@@ -7,7 +7,7 @@ $androidSdk = Join-Path $env:LOCALAPPDATA "Android\Sdk"
 $jdk = Get-ChildItem -LiteralPath "C:\Program Files\Eclipse Adoptium" -Directory -Filter "jdk-17*" |
     Sort-Object Name -Descending |
     Select-Object -First 1
-$packageName = "com.minar.birday.debug"
+$packageName = "fr.exoti.bday.debug"
 $testRunner = "$packageName.test/androidx.test.runner.AndroidJUnitRunner"
 $testClass = "com.minar.birday.testing.TestContactSeeder"
 $photosDirectory = Join-Path $projectRoot "test-data\profile-photos"

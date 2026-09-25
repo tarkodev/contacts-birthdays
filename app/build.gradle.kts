@@ -13,7 +13,7 @@ android {
     buildToolsVersion = "35.0.0"
 
     defaultConfig {
-        applicationId = "com.minar.birday"
+        applicationId = "fr.exoti.bday"
         targetSdk = 36
         minSdk = 26
         versionCode = 37
