@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$Package = "com.minar.birday.debug"
+    [string]$Package = "fr.exoti.bday.debug"
 )
 
 $ErrorActionPreference = "Stop"
