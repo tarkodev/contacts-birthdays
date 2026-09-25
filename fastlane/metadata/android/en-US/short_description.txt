@@ -1,1 +1,1 @@
-A simple yet useful birthday manager. Birday is free and ad-free! 🥳
+Remember birthdays from your contacts with reminders and widgets.

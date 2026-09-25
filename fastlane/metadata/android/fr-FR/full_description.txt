@@ -1,37 +1,11 @@
-<h2><b>Introduction 👋</b></h2>
-Cette application a été créée pour mémoriser et gérer les événements de manière simple et efficace.
-L'application contient des options de personnalisation de base et une présentation, ainsi que de nouvelles ressources telles que des dessins vectoriels animés et le thème sombre/clair automatique. Le support et les mises à jour sont garantis !
+Anniversaires vous aide à ne pas oublier les personnes et les dates qui comptent.
 
+Importez des anniversaires et d'autres événements depuis vos contacts ou votre calendrier, ou ajoutez-les à la main. Consultez les prochaines dates et choisissez vos rappels.
 
-<h2><b>Pourquoi devrais-je utiliser Birday? 😕</b></h2>
-Eh bien, je vais vous dire 3 raisons principales :
-<ul>
-    <li> Cela peut vous aider à vous souvenir de chaque anniversaire au moment que vous préférez ! </li>
-    <li> Cela n'utilisera que quelques Mo de stockage ! </li>
-    <li> C'est beau, plein d'animations et simple à utiliser ! </li>
-</ul>
-
-Birthday vous permet d'importer les anniversaires directement depuis vos contacts, avec un système de favoris simple et un ensemble de statistiques à découvrir !
-Si vous commencez à développer des applications et que vous en avez besoin d'une à regarder, pour trouver de l'inspiration et des astuces : cliquez sur le lien Github, et le code source de Birday vous sera servi !
-  
-
-<h2><b>Fonctionnalités 🎂</b></h2>
-<ul>
-    <li> Chronologie d'anniversaire simple, avec la prochaine date et le nom de chaque personne </li>
-    <li> Système de favoris, pour regrouper vos anniversaires préférés et voir plus d'informations </li>
-    <li> Importez les anniversaires depuis les contacts avec une détection basique des doublons </li>
-    <li> Supprimez ou modifiez facilement chaque anniversaire </li>
-    <li> Chaque événement favori a un champ de notes pratique </li>
-    <li> Notification personnalisable le jour de l'anniversaire ! </li>
-    <li> Thèmes clairs et sombres (le mode sombre automatique d'Android 10 est pris en charge) </li>
-    <li> Couleur d'accentuation sélectionnable (12 choix) </li>
-    <li> Cachez et affichez les cartes du dessus pour une flexibilité maximale de l'interface </li>
-    <li> Une barre de recherche rapide ! </li>
-    <li> Un widget minimal, avec un thème sombre en option </li>
-    <li> Première présentation et belles animations comprenant une icône de notification animée </li>
-    <li> Interface utilisateur simple et précise, suivant les directives material </li>
-</ul>
-
-Remarque : le système de notification repose sur les ressources du système Android, certains fabricants peuvent donc provoquer des dysfonctionnements. La raison est que certains appareils Xiaomi, Huawei et Oneplus tuent les applications au lieu de simplement les fermer, ou bloquent le démarrage automatique du processus de l'application. Je ne peux pas résoudre ce problème, mais vous pouvez trouver plus d'informations sur dontkillmyapp.com.
-  
-  
+Fonctionnalités :
+- Triez les événements par date, nom ou âge
+- Recevez un rappel le jour même ou à l'avance
+- Retrouvez vos favoris et vos notes
+- Voyez les prochains événements dans les widgets
+- Choisissez un thème clair, sombre ou noir AMOLED
+- Sauvegardez et restaurez vos événements
